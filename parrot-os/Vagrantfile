@@ -1,0 +1,19 @@
+vms = {
+  "parrot" => { :cpus => 4, :mem => 8192 }
+}
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "parrotos-5.3"
+  config.vm.guest = "debian"
+  vms.each do |name, data|
+    config.vm.define name do |guest|
+      guest.vm.hostname = name
+      guest.vm.provider :virtualbox do |vm|
+        vm.name = name
+        vm.cpus = data[:cpus]
+        vm.memory = data[:mem]
+        vm.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
+      end
+    end
+  end
+end
