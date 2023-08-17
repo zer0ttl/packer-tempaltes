@@ -1,0 +1,8 @@
+*.iso
+*.log
+*.vdi
+*.box
+*.ovf
+packer_cache/
+/.vagrant
+provision.yml
