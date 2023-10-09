@@ -1,0 +1,21 @@
+{
+    "description": "Ubuntu Server 22.04.3\r\n",
+    "short_description": "Ubuntu Server 22.04.3\r\n",
+    "name": "zer0ttl/ubuntu-server-22.04",
+    "versions": [
+        {
+            "version": "22.04.3",
+            "status": "active",
+            "description_html": "<h4>Ubuntu Server 22.04.3</h4>\n\n",
+            "description_markdown": "#### Ubuntu Server 22.04.3\r\n\r\n",
+            "providers": [
+                {
+                    "name": "libvirt",
+                    "checksum": "3a844b7616ec1863b8c9568fd817cb7cddf6226209de18cf2f190f40e2d0559b",
+                    "checksum_type": "sha256",
+                    "url": "file:///mnt/hdd01/projects/packer-templates/ubuntu-server-22.04/ubuntu-server-22.04-libvirt.box"
+                }
+            ]
+        }
+    ]
+}

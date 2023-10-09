@@ -1,0 +1,34 @@
+#cloud-config
+autoinstall:
+  storage:
+    layout:
+      name: direct
+  early-commands:
+    # otherwise packer tries to connect and exceed max attempts:
+    - systemctl stop ssh.service
+    - systemctl stop ssh.socket
+  ssh:
+    install-server: yes
+    allow-pw: yes
+  network:
+    version: 2
+    ethernets:
+      all:
+        match:
+          name: "*"
+        dhcp4: yes
+  user-data:
+    users:
+      - name: vagrant
+        password: '$6$Tg33gGb.Cma2ZIIq$7tcxgP9qbg9UQom.kUvp5CJxCZxtFWPRKwgVxsLzBc5AuH9V0Gwh7VIvRwg/sbDh9AN4En53Yxy0dUetr5q5p/'
+#        plain_text_passwd: vagrant
+        lock_passwd: false
+        groups: sudo
+  late-commands:
+    - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /target/etc/ssh/sshd_config
+    - sed -i -e '/Defaults\s\+env_reset/a Defaults\texempt_group=sudo' /target/etc/sudoers
+    - sed -i -e 's/%sudo  ALL=(ALL:ALL) ALL/%sudo  ALL=NOPASSWD:ALL/g' /target/etc/sudoers
+    - date > /target/etc/vagrant_box_build_time
+#    - echo 'vagrant ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/99_vagrant
+#    - chmod 440 /target/etc/sudoers.d/99_vagrant   
+  version: 1
