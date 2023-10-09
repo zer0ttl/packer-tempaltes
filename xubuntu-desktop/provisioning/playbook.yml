@@ -1,0 +1,38 @@
+- name: Hello world
+  hosts: image-test
+  gather_facts: false
+  tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+        timeout: 600
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
+    - name: Gather services facts
+      ansible.builtin.service_facts:
+
+    - name: Get python3 version
+      ansible.builtin.shell:
+        cmd: "python3 --version | sed 's/Python //'"
+      register: python3_ver
+      changed_when: false
+      failed_when: "python3_ver.stdout is version('3.9', '<')"
+
+    - name: Get ansible version
+      ansible.builtin.shell:
+        cmd: "ansible --version | grep ^ansible | sed -r 's/.*([0-9]+\\.[0-9]+\\.[0-9]+).*/\\1/'"
+      register: ansible_ver
+      changed_when: false
+      failed_when: "ansible_ver.stdout is version('2.10', '<')"
+
+    - name: Get ansible-python version
+      ansible.builtin.shell:
+        cmd: "ansible --version | grep 'python version =' | sed -r 's/.*= ([0-9]+\\.[0-9]+\\.[0-9]+).*/\\1/'"
+      register: ansible_python_ver
+      changed_when: false
+      failed_when: "ansible_python_ver.stdout is version('3.9', '<')"
+
+    - name: Print hello world
+      ansible.builtin.debug:
+        msg: "Hello World"

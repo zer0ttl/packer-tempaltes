@@ -1,0 +1,21 @@
+{
+    "description": "Xubuntu Desktop 22.04.3\r\n",
+    "short_description": "Xubuntu Desktop 22.04.3\r\n",
+    "name": "zer0ttl/xubuntu-desktop-22.04",
+    "versions": [
+        {
+            "version": "22.04.3",
+            "status": "active",
+            "description_html": "<h4>Xubuntu Desktop 22.04.3</h4>\n\n",
+            "description_markdown": "#### Xubuntu Desktop 22.04.3\r\n\r\n",
+            "providers": [
+                {
+                    "name": "libvirt",
+                    "checksum": "0521435ba7b7b8c248b3439c8827341d28490e826307e4b4b8b963d6a9a979b9",
+                    "checksum_type": "sha256",
+                    "url": "file:///mnt/hdd01/projects/packer-templates/xubuntu-desktop/xubuntu-desktop-22.04-libvirt.box"
+                }
+            ]
+        }
+    ]
+}
