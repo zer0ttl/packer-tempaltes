@@ -1,0 +1,21 @@
+{
+    "description": "ParrotOS 5.3\r\n",
+    "short_description": "ParrotOS 5.3\r\n",
+    "name": "zer0ttl/parrotos-5.3",
+    "versions": [
+        {
+            "version": "5.3",
+            "status": "active",
+            "description_html": "<h4>ParrotOS 5.3</h4>\n\n",
+            "description_markdown": "#### ParrotOS 5.3\r\n\r\n",
+            "providers": [
+                {
+                    "name": "libvirt",
+                    "checksum": "f7fd2adbb1cc40dba6c47cd320b138104aa17d609a261e2399a00f063c22d047",
+                    "checksum_type": "sha256",
+                    "url": "file:///mnt/hdd01/projects/packer-templates/parrot-os/parrotos-5.3-libvirt.box"
+                }
+            ]
+        }
+    ]
+}

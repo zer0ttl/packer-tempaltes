@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-echo 'vagrant' | sudo -S -v
+# echo 'vagrant' | sudo -S -v
 
 sudo systemctl enable ssh
 
