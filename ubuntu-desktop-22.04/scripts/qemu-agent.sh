@@ -2,6 +2,8 @@
 #
 # Install qemu-guest-agent on the vm
 
-sudo apt-get update -y
-sudo apt-get install -y qemu-guest-agent
-sudo systemctl start qemu-quest-agent
+echo "*** Installing qemu-guest-agent"
+
+DEBIAN_FRONTEND="noninteractive" apt-get update -y -qq > /dev/null
+DEBIAN_FRONTEND="noninteractive" apt-get install qemu-guest-agent -y -qq > /dev/null
+#systemctl start qemu-guest-agent

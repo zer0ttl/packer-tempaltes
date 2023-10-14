@@ -1,6 +1,9 @@
-#!/bin/sh -x
-
+#!/bin/bash
+#
 # add user vagrant with password vagrant, set sudo, add public ssh key
+
+echo "*** Adding vagrant user"
+
 sudo useradd -p '$1$9bp.cPKY$BeaZIuXT4PyfJBnTu74c4.' --uid 900 --create-home --shell /bin/bash vagrant
 echo "vagrant  ALL=(ALL)  NOPASSWD: ALL" | sudo tee /etc/sudoers.d/vagrant > /dev/null
 sudo sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers

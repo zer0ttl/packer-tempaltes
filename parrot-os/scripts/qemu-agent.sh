@@ -4,4 +4,4 @@
 
 sudo apt-get update -y
 sudo apt-get install -y qemu-guest-agent
-sudo systemctl start qemu-quest-agent
+#sudo systemctl start qemu-guest-agent

@@ -2,7 +2,7 @@
 #
 # Update the box
 
-export DEBIAN_FRONTEND="noninteractive"
+echo "*** Updating the box"
 
-apt-get update -qq > /dev/null
-apt-get dist-upgrade -qq -y > /dev/null
+DEBIAN_FRONTEND="noninteractive" apt-get update -y -qq > /dev/null
+DEBIAN_FRONTEND="noninteractive" apt-get upgrade -y -qq > /dev/null

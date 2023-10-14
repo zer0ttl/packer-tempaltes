@@ -126,15 +126,21 @@ build {
   provisioner "shell" {
     scripts = [
       "scripts/setup-vagrant-user.sh",
-      "scripts/desktop.sh"
+      "scripts/desktop.sh",
+      "scripts/spice-agent.sh",
+      "scripts/qemu-agent.sh",
+      "scripts/updates.sh"
     ]
   }
 
+#  provisioner "breakpoint" {}
+
   provisioner "shell" {
-    inline = ["reboot"]
+    inline            = ["reboot"]
+    expect_disconnect = true
   }
 
-  provisioner "breakpoint" {}
+#  provisioner "breakpoint" {}
 
   post-processor "vagrant" {
     compression_level    = 9

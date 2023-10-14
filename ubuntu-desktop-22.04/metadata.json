@@ -11,7 +11,7 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "b57118cc907b49964df711b03a3a8d359e789c6f4717569473a394dce2f1f097",
+                    "checksum": "3f94717fbf786d019e255e0b2e65e8046b0ec6ce74ea4186ade334925eaa31c4",
                     "checksum_type": "sha256",
                     "url": "file:///mnt/hdd01/projects/packer-templates/ubuntu-desktop-22.04/ubuntu-desktop-22.04-libvirt.box"
                 }
