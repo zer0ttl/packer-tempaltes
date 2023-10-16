@@ -6,3 +6,5 @@ echo "*** Updating the box"
 
 DEBIAN_FRONTEND="noninteractive" apt-get update -y -qq > /dev/null
 DEBIAN_FRONTEND="noninteractive" apt-get upgrade -y -qq > /dev/null
+
+echo "*** Finished updating the box"

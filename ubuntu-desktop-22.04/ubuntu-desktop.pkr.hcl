@@ -131,6 +131,7 @@ build {
       "scripts/qemu-agent.sh",
       "scripts/updates.sh"
     ]
+    expect_disconnect = true
   }
 
 #  provisioner "breakpoint" {}
@@ -141,6 +142,13 @@ build {
   }
 
 #  provisioner "breakpoint" {}
+
+  provisioner "shell" {
+    scripts = [
+      "scripts/fixes.sh"
+    ]
+    expect_disconnect = true
+  }
 
   post-processor "vagrant" {
     compression_level    = 9
