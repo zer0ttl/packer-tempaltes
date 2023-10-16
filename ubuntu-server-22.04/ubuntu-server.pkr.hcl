@@ -123,11 +123,26 @@ build {
 #  }
 #
 
+#  provisioner "breakpoint" {}
+
   provisioner "shell" {
     scripts = [
-      "scripts/setup-vagrant-user.sh"
-#      "scripts/desktop.sh"
+      "scripts/setup-vagrant-user.sh",
+      "scripts/spice-agent.sh",
+      "scripts/qemu-agent.sh",
+      "scripts/updates.sh"
     ]
+    expect_disconnect = true
+  }
+
+
+#  provisioner "breakpoint" {}
+
+  provisioner "shell" {
+    scripts = [
+      "scripts/fixes.sh"
+    ]
+    expect_disconnect = true
   }
 
   post-processor "vagrant" {

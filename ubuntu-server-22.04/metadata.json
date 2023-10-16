@@ -11,7 +11,7 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "3a844b7616ec1863b8c9568fd817cb7cddf6226209de18cf2f190f40e2d0559b",
+                    "checksum": "a9ce012a840f214b88fb3a34c52b416761b41c6bf3a77f8dacd6ded298906f71",
                     "checksum_type": "sha256",
                     "url": "file:///mnt/hdd01/projects/packer-templates/ubuntu-server-22.04/ubuntu-server-22.04-libvirt.box"
                 }
