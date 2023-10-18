@@ -151,9 +151,9 @@ build {
     execute_command = "echo 'vagrant' | {{.Vars}} sudo -S  sh {{.Path}}"
     scripts = [
       "scripts/setup-vagrant-user.sh",
-      "scripts/updates.sh",
       "scripts/spice-agent.sh",
-      "scripts/qemu-agent.sh"
+      "scripts/qemu-agent.sh",
+      "scripts/updates.sh"
     ]
   }
 

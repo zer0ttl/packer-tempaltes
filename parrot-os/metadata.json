@@ -11,7 +11,7 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "f7fd2adbb1cc40dba6c47cd320b138104aa17d609a261e2399a00f063c22d047",
+                    "checksum": "21af1efcaeb1def2a22de53c624efac07659836167b23830b5197d18db367681",
                     "checksum_type": "sha256",
                     "url": "file:///mnt/hdd01/projects/packer-templates/parrot-os/parrotos-5.3-libvirt.box"
                 }
