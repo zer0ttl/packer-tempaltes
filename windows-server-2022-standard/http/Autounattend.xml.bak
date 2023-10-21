@@ -220,6 +220,12 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f</CommandLine>
+                    <Description>Network prompt</Description>
+                    <Order>5</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c net user vagrant /active:yes</CommandLine>
                     <Description>Enable Admin User</Description>
                     <Order>6</Order>
@@ -232,16 +238,32 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bginfo.ps1</CommandLine>
-                    <Description>Setup and Configure BgInfo</Description>
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c powershell -Command "Invoke-WebRequest -Uri 'https://live.sysinternals.com/Bginfo.exe' -OutFile 'C:\Windows\Bginfo.exe'" </CommandLine>
+                    <Description>Download BgInfo</Description>
                     <Order>8</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\fixes.ps1</CommandLine>
-                    <Description>Some Common Fixes</Description>
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c copy a:\bginfo.bgi C:\Windows\bginfo.bgi </CommandLine>
+                    <Description>Copy BgInfo Config File</Description>
                     <Order>9</Order>
                     <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v BgInfo /t REG_SZ /d "C:\Windows\Bginfo.exe C:\Windows\Bginfo.bgi /Timer:0 /nolicprompt" /f</CommandLine>
+                    <Description>Configure BgInfo to start automatically</Description>
+                    <Order>10</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ /v HideFileExt /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>14</Order>
+                    <Description>Show file extensions in Explorer</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKCU\Console /v QuickEdit /t REG_DWORD /d 1 /f</CommandLine>
+                    <Order>15</Order>
+                    <Description>Enable QuickEdit mode</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
@@ -249,9 +271,29 @@
                     <Description>Disable password expiration for vagrant user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\agents.ps1</CommandLine>
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateFileSizePercent /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>17</Order>
+                    <Description>Zero Hibernation File</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateEnabled /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>18</Order>
+                    <Description>Disable Hibernation Mode</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\Software\Microsoft\Windows\CurrentVersion\policies\system\ /v EnableLUA /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>21</Order>
+                    <Description>Disable UAC</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%systemroot%\system32\msiexec.exe /i e:\guest-agent\qemu-ga-x86_64.msi /qn /passive</CommandLine>
                     <Order>24</Order>
-                    <Description>Install Virtio Guest Tools</Description>
+                    <Description>Install Qemu Guest Agent</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c start /wait e:\virtio-win-guest-tools.exe /q</CommandLine>
+                    <Order>25</Order>
+                    <Description>Install Virtio Quest Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\configureRemotingForAnsible.ps1</CommandLine>

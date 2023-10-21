@@ -148,7 +148,10 @@ source "qemu" "windows_2022_standard" {
                            "scripts/configureRemotingForAnsible.ps1",
                            "scripts/opensshv2.ps1",
                            "scripts/bginfo.bgi",
-                           "scripts/sysprep.ps1",
+                           "scripts/bginfo.ps1",
+                           "scripts/agents.ps1",
+                           "scripts/redhat.cer",
+                           "scripts/fixes.ps1",
                            "scripts/sysprep.bat"
                         ]
   format              = "qcow2"
