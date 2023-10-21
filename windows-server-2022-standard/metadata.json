@@ -11,7 +11,7 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "69901a5cd63dd72db29556551ce1d8f22cb5a490b0dbc04fb193d900eb0ec12e",
+                    "checksum": "39187096e22b856c19df422e973be2604584e17c00760bfdbefb9d541c3a7f07",
                     "checksum_type": "sha256",
                     "url": "file:///mnt/hdd01/projects/packer-templates/windows-server-2022-standard/windows-server-2022-standard-libvirt.box"
                 }
