@@ -1,19 +1,16 @@
-vms = {
-  "parrot" => { :cpus => 4, :mem => 8192 }
-}
-
-Vagrant.configure("2") do |config|
-  config.vm.box = "parrotos-5.3"
-  config.vm.guest = "debian"
-  vms.each do |name, data|
-    config.vm.define name do |guest|
-      guest.vm.hostname = name
-      guest.vm.provider :virtualbox do |vm|
-        vm.name = name
-        vm.cpus = data[:cpus]
-        vm.memory = data[:mem]
-        vm.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
-      end
-    end
+Vagrant.configure(2) do |config|
+  config.vm.network :forwarded_port, guest: 22, host: 22, id: "ssh", auto_correct:true
+  config.vm.provider :libvirt do |guest|
+    guest.cpus              = 2
+    guest.memory            = 2048
+    guest.disk_bus          = "virtio"
+    guest.nic_model_type    = "virtio"
+    guest.graphics_type     = "spice"
+    guest.graphics_port     =  -1
+    guest.graphics_ip       = "0.0.0.0"
+    guest.graphics_autoport = "yes"
+    guest.video_type        = "virtio"
+    guest.channel :type     => 'spicevmc', :target_name => 'com.redhat.spice.0',     :target_type => 'virtio'
+    guest.channel :type     => 'unix',     :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
   end
 end
