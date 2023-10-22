@@ -24,7 +24,7 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/Autounattend.xml"
+  default = "http-core/Autounattend.xml"
 }
 
 variable "boot_wait" {
