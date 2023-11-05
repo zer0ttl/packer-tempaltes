@@ -195,12 +195,12 @@
                     <Description>Sets detected network connections to private to allow start of winrm</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <Order>5</Order>
+                    <Order>4</Order>
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c a:\enable-winrm.bat</CommandLine>
                     <Description>Enable and configure WinRM</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <Order>6</Order>
+                    <Order>5</Order>
                     <CommandLine>%windir%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
                     <Description>Disable password expiration for vagrant user</Description>
                 </SynchronousCommand>
