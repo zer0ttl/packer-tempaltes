@@ -49,12 +49,12 @@ variable "headless" {
 
 variable "iso_checksum" {
   type    = string
-  default = "iso.sha256"
+  default = "output-stage1/packer_windows-10-stage1_sha256.checksum"
 }
 
 variable "iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+  default = "output-stage1/windows-10-stage1"
 }
 
 variable "memory" {
@@ -64,12 +64,12 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "windows-10"
+  default = "windows-10-stage2"
 }
 
 variable "packer_images_output_dir" {
   type    = string
-  default = "output"
+  default = "output-stage2"
 }
 
 variable "ssh_private_key_file" {
@@ -135,15 +135,14 @@ variable "vnc_port_min" {
 }
 
 # sources
-source "qemu" "windows-10" {
+source "qemu" "windows_10-stage2" {
+  disk_image = true
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
-  communicator        = "winrm"
+  communicator        = "ssh"
   cpus                = "${var.cpus}"
   disk_interface      = "virtio"
-  disk_size           = "${var.disk_size}"
   floppy_files        = [
-                           "${var.autounattend}",
                            "${var.unattend}",
                            "scripts/configureRemotingForAnsible.ps1",
                            "scripts/opensshv2.ps1",
@@ -175,26 +174,32 @@ source "qemu" "windows-10" {
   ssh_private_key_file = "${var.ssh_private_key_file}"
   ssh_username        = "${var.ssh_username}"
   ssh_wait_timeout    = "${var.ssh_wait_timeout}"
+  use_backing_file    = true
   vm_name             = "${var.name}"
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
-  winrm_password      = "${var.winrm_password}"
-  winrm_timeout       = "${var.winrm_timeout}"
-  winrm_username      = "${var.winrm_username}"
+#  winrm_insecure      = "true"
+#  winrm_password      = "${var.winrm_password}"
+#  winrm_timeout       = "${var.winrm_timeout}"
+#  winrm_use_ssl       = "true"
+#  winrm_username      = "${var.winrm_username}"
 }
 
 # builds
 build {
   sources = [
-    "source.qemu.windows-10"
+    "source.qemu.windows_10-stage2"
   ]
+
+  provisioner "windows-restart" {}
+
+#  provisioner "breakpoint" {}
 
   provisioner "powershell" {
     elevated_user        = "${var.winrm_username}"
     elevated_password    = "${var.winrm_password}"
     scripts = [
-      "scripts/opensshv2.ps1",
       "scripts/bginfo.ps1",
       "scripts/agents.ps1",
       "scripts/fixes.ps1",
@@ -205,19 +210,12 @@ build {
 
   provisioner "windows-restart" {}
 
+#  provisioner "breakpoint" {}
+
   post-processor "vagrant" {
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile"
-  }
-
-  post-processor "artifice" {
-    files = ["${var.name}-{{.Provider}}.box"]
-  }
-
-  post-processor "checksum" {
-    checksum_types = ["sha1", "sha256"]
-    output = "packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
   }
 
 }

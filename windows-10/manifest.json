@@ -1,0 +1,131 @@
+{
+  "builds": [
+    {
+      "name": "windows_10",
+      "builder_type": "qemu",
+      "build_time": 1699045170,
+      "files": [
+        {
+          "name": "output/windows-10",
+          "size": 10803085312
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "18714047-3c68-dcab-e01d-b1a951ab19c6",
+      "custom_data": null
+    },
+    {
+      "name": "windows_10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699053915,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 11683233792
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "45ce834a-2e05-0471-85bc-d6c1d7ad7f2e",
+      "custom_data": null
+    },
+    {
+      "name": "windows_10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699055874,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 11841044480
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "2803484d-0cc4-afa2-7e6c-cb568e7e3266",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699058166,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 11671306240
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "2a6198b2-417a-a497-0e99-84af6ef121d8",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699107625,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 12479954944
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "ad489815-3337-8025-38d0-cfc19e4fa5f6",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699111085,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 10939531264
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "f840696a-a65b-20f0-d639-af56dd5162d2",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699113202,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 10836115456
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "63d393d4-227a-01e8-0cb1-cace2c32f486",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699114291,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 10817110016
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "6dc02730-2b39-ac6e-ae00-6702ca28ebc3",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699119380,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 11907235840
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "b08bced2-fe9e-c476-ea88-d92b87ad3fb0",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "b08bced2-fe9e-c476-ea88-d92b87ad3fb0"
+}

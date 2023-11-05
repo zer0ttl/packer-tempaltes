@@ -64,12 +64,12 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "windows-10"
+  default = "windows-10-stage1"
 }
 
 variable "packer_images_output_dir" {
   type    = string
-  default = "output"
+  default = "output-stage1"
 }
 
 variable "ssh_private_key_file" {
@@ -135,10 +135,10 @@ variable "vnc_port_min" {
 }
 
 # sources
-source "qemu" "windows-10" {
+source "qemu" "windows-10-stage1" {
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
-  communicator        = "winrm"
+  communicator        = "ssh"
   cpus                = "${var.cpus}"
   disk_interface      = "virtio"
   disk_size           = "${var.disk_size}"
@@ -179,33 +179,33 @@ source "qemu" "windows-10" {
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
-  winrm_password      = "${var.winrm_password}"
-  winrm_timeout       = "${var.winrm_timeout}"
-  winrm_username      = "${var.winrm_username}"
+#  winrm_insecure      = "true"
+#  winrm_password      = "${var.winrm_password}"
+#  winrm_timeout       = "${var.winrm_timeout}"
+#  winrm_use_ssl       = "true"
+#  winrm_username      = "${var.winrm_username}"
 }
 
 # builds
 build {
   sources = [
-    "source.qemu.windows-10"
+    "source.qemu.windows-10-stage1"
   ]
+
+  provisioner "windows-restart" {}
 
   provisioner "powershell" {
     elevated_user        = "${var.winrm_username}"
     elevated_password    = "${var.winrm_password}"
     scripts = [
-      "scripts/opensshv2.ps1",
-      "scripts/bginfo.ps1",
-      "scripts/agents.ps1",
-      "scripts/fixes.ps1",
-      "scripts/enable-file-sharing.ps1",
       "scripts/post-setup.ps1"
     ]
   }
 
-  provisioner "windows-restart" {}
+#  provisioner "breakpoint" {}
 
   post-processor "vagrant" {
+    keep_input_artifact  = true
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile"
@@ -217,7 +217,10 @@ build {
 
   post-processor "checksum" {
     checksum_types = ["sha1", "sha256"]
-    output = "packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
+    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+  }
 }

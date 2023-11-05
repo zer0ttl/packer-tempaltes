@@ -11,7 +11,7 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "418b9ea3e89e0cef52e7a36cfa69caf4895e0dd3218f0d56e2b22cc0d635f3a0",
+                    "checksum": "6d975725fad3e55195622fbc5a4ee5c435c32a6627fca6ae50cd4ab964f88f01",
                     "checksum_type": "sha256",
                     "url": "file:///mnt/hdd01/projects/packer-templates/windows-10/windows-10-libvirt.box"
                 }

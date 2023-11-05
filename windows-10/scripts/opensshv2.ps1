@@ -1,3 +1,23 @@
+#
+# openssh setup
+
+Set-StrictMode -Version Latest
+$ProgressPreference = 'SilentlyContinue'
+$ErrorActionPreference = 'Stop'
+
+trap {
+    Write-Host
+    Write-Host "ERROR: $_"
+    ($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1' | Write-Host
+    ($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1' | Write-Host
+    Write-Host
+    Write-Host 'Sleeping for 60m to give you time to look around the virtual machine before self-destruction...'
+    Start-Sleep -Seconds (60*60)
+    Exit 1
+}
+
+Write-Host 'Installing Openssh'
+
 # make sure that OpenSSH is available
 $OpenSSHServer = $(Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*').Name
 $OpenSSHClient = $(Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Client*').Name
@@ -26,7 +46,7 @@ if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyCon
 # Set Authentication to public key
 ((Get-Content -path C:\ProgramData\ssh\sshd_config -Raw) `
 -replace '#PubkeyAuthentication yes','PubkeyAuthentication yes' `
--replace '#PasswordAuthentication yes','PasswordAuthentication no' `
+-replace '#PasswordAuthentication yes','PasswordAuthentication yes' `
 -replace 'Match Group administrators','#Match Group administrators' `
 -replace 'AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys','#AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys') | Set-Content -Path C:\ProgramData\ssh\sshd_config
 
@@ -39,6 +59,8 @@ New-item -Path $env:USERPROFILE -Name .ssh -ItemType Directory -force
 
 # Copy key
 Write-Output "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" | Out-File $env:USERPROFILE\.ssh\authorized_keys -Encoding ascii
+
+Write-Host 'Openssh setup complete'
 
 
 # Uninstall the OpenSSH Client

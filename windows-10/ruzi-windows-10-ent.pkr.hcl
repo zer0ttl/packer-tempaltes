@@ -24,12 +24,12 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/bento/Autounattend.xml"
+  default = "http/Autounattend.xml"
 }
 
 variable "boot_wait" {
   type    = string
-  default = "60s"
+  default = "5s"
 }
 
 variable "cpus" {
@@ -109,7 +109,7 @@ variable "winrm_password" {
 
 variable "winrm_timeout" {
   type    = string
-  default = "30m"
+  default = "1h"
 }
 
 variable "winrm_username" {
@@ -134,8 +134,9 @@ variable "vnc_port_min" {
   # default is 5900
 }
 
+
 # sources
-source "qemu" "windows-10" {
+source "qemu" "windows_10" {
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
   communicator        = "winrm"
@@ -147,18 +148,13 @@ source "qemu" "windows-10" {
                            "${var.unattend}",
                            "scripts/configureRemotingForAnsible.ps1",
                            "scripts/opensshv2.ps1",
-                           "scripts/disable-winrm.ps1",
-                           "scripts/enable-file-sharing.ps1",
-                           "scripts/enable-winrm.bat",
                            "scripts/fixnetwork.ps1",
                            "scripts/bginfo.bgi",
                            "scripts/bginfo.ps1",
                            "scripts/agents.ps1",
-                           "scripts/post-setup.ps1",
-                           "scripts/SetupComplete.cmd",
                            "scripts/redhat.cer",
                            "scripts/fixes.ps1",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep-ruzi.bat"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
@@ -170,7 +166,7 @@ source "qemu" "windows-10" {
                         ]
   memory              = "${var.memory}"
   output_directory    = "${var.packer_images_output_dir}"
-  shutdown_command    = "a:\\sysprep.bat"
+  shutdown_command    = "a:\\sysprep-ruzi.bat"
   shutdown_timeout    = "${var.shutdown_wait_timeout}"
   ssh_private_key_file = "${var.ssh_private_key_file}"
   ssh_username        = "${var.ssh_username}"
@@ -179,45 +175,22 @@ source "qemu" "windows-10" {
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
+  winrm_insecure      = "true"
   winrm_password      = "${var.winrm_password}"
   winrm_timeout       = "${var.winrm_timeout}"
+  winrm_use_ssl       = "true"
   winrm_username      = "${var.winrm_username}"
 }
 
 # builds
 build {
-  sources = [
-    "source.qemu.windows-10"
-  ]
+  sources = ["source.qemu.windows_10"]
 
-  provisioner "powershell" {
-    elevated_user        = "${var.winrm_username}"
-    elevated_password    = "${var.winrm_password}"
-    scripts = [
-      "scripts/opensshv2.ps1",
-      "scripts/bginfo.ps1",
-      "scripts/agents.ps1",
-      "scripts/fixes.ps1",
-      "scripts/enable-file-sharing.ps1",
-      "scripts/post-setup.ps1"
-    ]
-  }
-
-  provisioner "windows-restart" {}
+#  provisioner "breakpoint" {}
 
   post-processor "vagrant" {
     compression_level    = 9
-    output               = "${var.name}-{{.Provider}}.box"
+    output               = "${var.name}-{{.Provider}}-ruzi.box"
     vagrantfile_template = "Vagrantfile"
   }
-
-  post-processor "artifice" {
-    files = ["${var.name}-{{.Provider}}.box"]
-  }
-
-  post-processor "checksum" {
-    checksum_types = ["sha1", "sha256"]
-    output = "packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-  }
-
 }
