@@ -1,12 +1,9 @@
-:: Disable WinRM so Vagrant doesnt trip over on first reboot post sysprep
+:: Disable firewall rules to avoid vagrant connecting to box before inital boot (post sysprep) is completed
 
-:: Uncomment below if you dont need basic and unencrypted WinRM, as more secure
-:: call winrm set winrm/config/service/auth @{Basic="false"}
-:: call winrm set winrm/config/service @{AllowUnencrypted="false"}
-
-:: Disable firewall rule
+:: Winrm
+netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new action=block
+:: OpenSSH
 netsh advfirewall firewall set rule name="OpenSSH SSH Server (sshd)" new action=block
 
-:: %WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe -Command Set-NetFirewallRule -Name "*ssh*" -Enabled False
-
+@REM Run Sysprep
 %WINDIR%\System32\Sysprep\sysprep.exe /generalize /oobe /shutdown /unattend:A:\unattend.xml

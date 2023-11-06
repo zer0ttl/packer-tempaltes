@@ -139,7 +139,7 @@ source "qemu" "windows_10-stage2" {
   disk_image = true
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
-  communicator        = "ssh"
+  communicator        = "winrm"
   cpus                = "${var.cpus}"
   disk_interface      = "virtio"
   floppy_files        = [
@@ -180,10 +180,10 @@ source "qemu" "windows_10-stage2" {
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
 #  winrm_insecure      = "true"
-#  winrm_password      = "${var.winrm_password}"
-#  winrm_timeout       = "${var.winrm_timeout}"
+  winrm_password      = "${var.winrm_password}"
+  winrm_timeout       = "${var.winrm_timeout}"
 #  winrm_use_ssl       = "true"
-#  winrm_username      = "${var.winrm_username}"
+  winrm_username      = "${var.winrm_username}"
 }
 
 # builds
@@ -191,10 +191,6 @@ build {
   sources = [
     "source.qemu.windows_10-stage2"
   ]
-
-  provisioner "windows-restart" {}
-
-#  provisioner "breakpoint" {}
 
   provisioner "powershell" {
     elevated_user        = "${var.winrm_username}"
@@ -209,8 +205,6 @@ build {
   }
 
   provisioner "windows-restart" {}
-
-#  provisioner "breakpoint" {}
 
   post-processor "vagrant" {
     compression_level    = 9

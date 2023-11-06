@@ -1,7 +1,7 @@
 {
     "description": "Windows 10 Enterprise\r\n",
     "short_description": "Windows 10 Enterprise\r\n",
-    "name": "zer0ttl/windows-10-enterprise",
+    "name": "zer0ttl/windows-10-enterprise-winrm",
     "versions": [
         {
             "version": "2102.0.2308",
@@ -11,9 +11,9 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "102efdaebe6f251a22a0e92a30817e9d3da0204876ca50535d285f13221e067e",
+                    "checksum": "d1f0ea28ab21780712bb0abcaffe46b66fa25e00ea94838ad584e93a67c13240",
                     "checksum_type": "sha256",
-                    "url": "file:///mnt/hdd01/projects/packer-templates/windows-10/windows-10-libvirt.box"
+                    "url": "file:///mnt/hdd01/projects/packer-templates/windows-10/windows-10-winrm-libvirt.box"
                 }
             ]
         }

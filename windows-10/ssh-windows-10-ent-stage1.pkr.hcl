@@ -24,7 +24,7 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/test01/Autounattend.xml"
+  default = "http/ssh/Autounattend.xml"
 }
 
 variable "boot_wait" {
@@ -64,12 +64,12 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "windows-10-stage1"
+  default = "windows-10-ssh"
 }
 
 variable "packer_images_output_dir" {
   type    = string
-  default = "output-stage1"
+  default = "output-ssh"
 }
 
 variable "ssh_private_key_file" {
@@ -135,10 +135,10 @@ variable "vnc_port_min" {
 }
 
 # sources
-source "qemu" "windows-10-stage1" {
+source "qemu" "windows-10-ssh" {
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
-  communicator        = "winrm"
+  communicator        = "ssh"
   cpus                = "${var.cpus}"
   disk_interface      = "virtio"
   disk_size           = "${var.disk_size}"
@@ -146,6 +146,7 @@ source "qemu" "windows-10-stage1" {
                            "${var.autounattend}",
                            "${var.unattend}",
                            "scripts/post-setup.ps1",
+                           "scripts/opensshv2.ps1",
                            "scripts/SetupComplete.cmd",
                            "scripts/sysprep.bat"
                         ]
@@ -161,24 +162,20 @@ source "qemu" "windows-10-stage1" {
   output_directory    = "${var.packer_images_output_dir}"
   shutdown_command    = "a:\\sysprep.bat"
   shutdown_timeout    = "${var.shutdown_wait_timeout}"
-#  ssh_private_key_file = "${var.ssh_private_key_file}"
-#  ssh_username        = "${var.ssh_username}"
-#  ssh_wait_timeout    = "${var.ssh_wait_timeout}"
+  ssh_private_key_file = "${var.ssh_private_key_file}"
+  ssh_username        = "${var.ssh_username}"
+  ssh_wait_timeout    = "${var.ssh_wait_timeout}"
   vm_name             = "${var.name}"
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
-#  winrm_insecure      = "true"
-  winrm_password      = "${var.winrm_password}"
-  winrm_timeout       = "${var.winrm_timeout}"
-#  winrm_use_ssl       = "true"
-  winrm_username      = "${var.winrm_username}"
 }
+
 
 # builds
 build {
   sources = [
-    "source.qemu.windows-10-stage1"
+    "source.qemu.windows-10-ssh"
   ]
 
   provisioner "powershell" {

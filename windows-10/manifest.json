@@ -125,7 +125,49 @@
       "artifact_id": "VM",
       "packer_run_uuid": "b08bced2-fe9e-c476-ea88-d92b87ad3fb0",
       "custom_data": null
+    },
+    {
+      "name": "windows-10-stage1",
+      "builder_type": "qemu",
+      "build_time": 1699196290,
+      "files": [
+        {
+          "name": "output-stage1/windows-10-stage1",
+          "size": 12560171008
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "bb221278-ed8d-9e60-055c-d0a44ea51971",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-ssh",
+      "builder_type": "qemu",
+      "build_time": 1699217704,
+      "files": [
+        {
+          "name": "output-ssh/windows-10-ssh",
+          "size": 12446531584
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "f6795015-2f66-05e5-c71f-d9bd228469a2",
+      "custom_data": null
+    },
+    {
+      "name": "windows-10-winrm",
+      "builder_type": "qemu",
+      "build_time": 1699221231,
+      "files": [
+        {
+          "name": "output-winrm/windows-10-winrm",
+          "size": 12006129664
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "5aeadcf6-0ec8-7e49-22ee-6f7019b868ab",
+      "custom_data": null
     }
   ],
-  "last_run_uuid": "b08bced2-fe9e-c476-ea88-d92b87ad3fb0"
+  "last_run_uuid": "5aeadcf6-0ec8-7e49-22ee-6f7019b868ab"
 }

@@ -28,17 +28,17 @@ Add-WindowsCapability -Online -Name $OpenSSHClient
 # Install the OpenSSH Server
 Add-WindowsCapability -Online -Name $OpenSSHServer
 
-# Start the sshd service
-Start-Service sshd
-
 # OPTIONAL but recommended:
 Set-Service -Name sshd -StartupType 'Automatic'
+
+# Start the sshd service
+Start-Service sshd
 
 # Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
 if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
     Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
     # Do not allow SSH connections as packer will try to provision the box before OS installation is done
-    New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled False -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+    New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 } else {
     Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
 }
@@ -61,7 +61,6 @@ New-item -Path $env:USERPROFILE -Name .ssh -ItemType Directory -force
 Write-Output "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" | Out-File $env:USERPROFILE\.ssh\authorized_keys -Encoding ascii
 
 Write-Host 'Openssh setup complete'
-
 
 # Uninstall the OpenSSH Client
 # Remove-WindowsCapability -Online -Name $OpenSSHClient

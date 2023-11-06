@@ -1,4 +1,5 @@
 @REM Allows winrm over public profile interfaces
+@REM Display Name: Windows Remote Management (HTTP-In)
 %windir%\System32\WindowsPowerShell\v1.0\powershell.exe -Command Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP" -RemoteAddress Any
 
 @REM winrm quickconfig -q
