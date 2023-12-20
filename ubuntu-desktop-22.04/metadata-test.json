@@ -1,0 +1,21 @@
+{
+    "description": "Ubuntu Desktop 22.04.3\r\n",
+    "short_description": "Ubuntu Desktop 22.04.3\r\n",
+    "name": "zer0ttl/ubuntu-desktop-22.04",
+    "versions": [
+        {
+            "version": "22.04.3",
+            "status": "active",
+            "description_html": "<h4>Ubuntu Desktop 22.04.3</h4>\n\n",
+            "description_markdown": "#### Ubuntu Desktop 22.04.3\r\n\r\n",
+            "providers": [
+                {
+                    "name": "libvirt",
+                    "checksum": "",
+                    "checksum_type": "sha256",
+                    "url": "file:///home/sudhir/projects/packer-templates/ubuntu-desktop-22.04/ubuntu-desktop-22.04-libvirt.box"
+                }
+            ]
+        }
+    ]
+}
