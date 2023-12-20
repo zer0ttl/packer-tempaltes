@@ -69,7 +69,7 @@ variable "ubuntu_checksum_url" {
 
 variable "ubuntu_iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/ubuntu-22.04.3-live-server-amd64.iso"
+  default = "/home/sudhir/isos/ubuntu-22.04.3-live-server-amd64.iso"
 #  default = "https://releases.ubuntu.com/22.04.3"
 }
 

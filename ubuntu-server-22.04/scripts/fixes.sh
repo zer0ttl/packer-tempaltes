@@ -23,6 +23,7 @@ sudo systemctl disable apt-daily-upgrade.timer;
 sudo systemctl daemon-reload;
 
 # clear machine id
+echo "*** Clear machine-id"
 sudo echo '' > /etc/machine-id
 sudo rm -f /var/lib/dbus/machine-id > /dev/null
 
