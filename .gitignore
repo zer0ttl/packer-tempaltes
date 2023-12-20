@@ -11,3 +11,5 @@ provision.yml
 */output/*
 *.checksum
 */ubuntu-server-22.04-qemu/*
+*/metadata.json
+*/*/metadata.json

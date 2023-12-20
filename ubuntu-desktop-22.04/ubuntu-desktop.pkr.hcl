@@ -70,7 +70,11 @@ variable "ubuntu_checksum_url" {
 variable "ubuntu_iso_url" {
   type    = string
    default = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
-#  default = "/mnt/hdd01/isos/ubuntu-22.04.3-live-server-amd64.iso"
+}
+
+variable "local_iso_path" {
+  type    = string
+  default = "/path/to/your/local/iso/repository"
 }
 
 variable "vnc_vrdp_bind_address" {
@@ -100,7 +104,7 @@ source "qemu" "ubuntu-desktop-2204" {
   disk_size        = "${var.disk_size}"
   headless         = "${var.headless}"
   http_directory   = "http"
-  iso_checksum     = "${var.ubuntu_checksum_url}"
+  iso_checksum     = "file:${var.ubuntu_checksum_url}"
   iso_urls         = ["${var.ubuntu_iso_url}"]
   memory           = "${var.memory}"
   output_directory = "${var.name}-qemu"

@@ -1,7 +1,16 @@
+#!/bin/bash
+
+metadata_file="metadata.json"
+user="zer0ttl"
+box_file="parrotos-5.3-libvirt.box"
+box_file_path=$(realpath ${box_file})
+box_file_checksum=$(sha256sum ${box_file_path} | cut -d ' ' -f 1)
+
+cat > ${metadata_file} <<END
 {
     "description": "ParrotOS 5.3\r\n",
     "short_description": "ParrotOS 5.3\r\n",
-    "name": "zer0ttl/parrotos-5.3",
+    "name": "${user}/parrotos-5.3",
     "versions": [
         {
             "version": "5.3",
@@ -11,11 +20,18 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "21af1efcaeb1def2a22de53c624efac07659836167b23830b5197d18db367681",
+                    "checksum": "${box_file_checksum}",
                     "checksum_type": "sha256",
-                    "url": "file:///mnt/hdd01/projects/packer-templates/parrot-os/parrotos-5.3-libvirt.box"
+                    "url": "file://${box_file_path}"
                 }
             ]
         }
     ]
 }
+END
+
+cat <<END
+Add the vagrant box with:
+
+vagrant box add "${metadata_file}"
+END

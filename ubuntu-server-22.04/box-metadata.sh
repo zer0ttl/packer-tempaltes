@@ -1,7 +1,16 @@
+#!/bin/bash
+
+metadata_file="metadata.json"
+user="zer0ttl"
+box_file="ubuntu-server-22.04-libvirt.box"
+box_file_path=$(realpath ${box_file})
+box_file_checksum=$(sha256sum ${box_file_path} | cut -d ' ' -f 1)
+
+cat > ${metadata_file} <<END
 {
     "description": "Ubuntu Server 22.04.3\r\n",
     "short_description": "Ubuntu Server 22.04.3\r\n",
-    "name": "zer0ttl/ubuntu-server-22.04",
+    "name": "${user}/ubuntu-server-22.04",
     "versions": [
         {
             "version": "22.04.3",
@@ -11,11 +20,19 @@
             "providers": [
                 {
                     "name": "libvirt",
-                    "checksum": "e190ed07f10c7ba90489ea0362a352b07b544ecba65058d86df6ae819ba35275",
+                    "checksum": "${box_file_checksum}",
                     "checksum_type": "sha256",
-                    "url": "file:///home/sudhir/projects/packer-templates/ubuntu-server-22.04/ubuntu-server-22.04-libvirt.box"
+                    "url": "file://${box_file_path}"
                 }
             ]
         }
     ]
 }
+
+END
+
+cat <<END
+Add the vagrant box with:
+
+vagrant box add "${metadata_file}"
+END

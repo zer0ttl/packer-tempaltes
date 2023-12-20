@@ -67,8 +67,12 @@ variable "parrotos_checksum_url" {
 
 variable "parrotos_iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/Parrot-architect-5.3_amd64.iso"
-#  default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+  default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+}
+
+variable "local_iso_path" {
+  type    = string
+  default = "/path/to/your/local/iso/repository"
 }
 
 variable "ssh_username" {
