@@ -22,8 +22,13 @@ sudo systemctl disable apt-daily.timer;
 sudo systemctl disable apt-daily-upgrade.timer;
 sudo systemctl daemon-reload;
 
-# clear machine id
-echo "*** Clear machine-id"
+# reset the machine-id.
+# NB systemd will re-generate it on the next boot.
+# NB machine-id is indirectly used in DHCP as Option 61 (Client Identifier), which
+#    the DHCP server uses to (re-)assign the same or new client IP address.
+# see https://www.freedesktop.org/software/systemd/man/machine-id.html
+# see https://www.freedesktop.org/software/systemd/man/systemd-machine-id-setup.html
+echo "*** Reset the machine-id"
 sudo echo '' > /etc/machine-id
 sudo rm -f /var/lib/dbus/machine-id > /dev/null
 
