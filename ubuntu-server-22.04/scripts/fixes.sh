@@ -22,6 +22,10 @@ sudo systemctl disable apt-daily.timer;
 sudo systemctl disable apt-daily-upgrade.timer;
 sudo systemctl daemon-reload;
 
+# clear machine id
+sudo echo '' > /etc/machine-id
+sudo rm -f /var/lib/dbus/machine-id > /dev/null
+
 # cleanup
 echo "*** Cleanup"
 DEBIAN_FRONTEND="noninteractive" sudo apt-get -y autoremove > /dev/null
