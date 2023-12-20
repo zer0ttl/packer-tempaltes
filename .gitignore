@@ -10,3 +10,4 @@ provision.yml
 /*/.vagrant/*
 */output/*
 *.checksum
+*/ubuntu-server-22.04-qemu/*
