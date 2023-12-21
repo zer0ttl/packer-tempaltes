@@ -2,6 +2,10 @@
 #
 # add user vagrant with password vagrant, set sudo, add public ssh key
 
+# To allow for automated installs, we disable interactive configuration steps.
+export DEBIAN_FRONTEND=noninteractive
+export DEBCONF_NONINTERACTIVE_SEEN=true
+
 echo "*** Adding vagrant user"
 
 # sudo useradd -p '$1$9bp.cPKY$BeaZIuXT4PyfJBnTu74c4.' --uid 900 --create-home --shell /bin/bash vagrant

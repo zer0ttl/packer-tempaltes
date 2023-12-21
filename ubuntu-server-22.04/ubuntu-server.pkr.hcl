@@ -134,6 +134,7 @@ build {
       "scripts/setup-vagrant-user.sh",
       "scripts/spice-agent.sh",
       "scripts/qemu-agent.sh",
+      "scripts/network.sh",
       "scripts/updates.sh"
     ]
     expect_disconnect = true

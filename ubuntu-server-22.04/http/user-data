@@ -1,8 +1,36 @@
 #cloud-config
 autoinstall:
+  locale: en_US.UTF-8
+  keyboard:
+      layout: us
+      variant: ""
+      toggle: ""
+  network:
+      network:
+          version: 2
+          ethernets:
+              eth0:
+                 dhcp4: yes
+                 dhcp6: no
+  apt:
+      geoip: false
+      primary:
+          - arches: [default]
+            uri: https://mirrors.edge.kernel.org/ubuntu/
+            # uri: https://old-releases.ubuntu.com/ubuntu/
+      security:
+          - arches: [default]
+            uri: https://mirrors.edge.kernel.org/ubuntu/
+            # uri: https://old-releases.ubuntu.com/ubuntu/
   storage:
     layout:
-      name: direct
+      # name: direct
+      name: lvm
+  packages:
+      - sed
+      - curl
+      - sudo
+      - openssh-server
   early-commands:
     # otherwise packer tries to connect and exceed max attempts:
     - systemctl stop ssh.service
@@ -23,5 +51,10 @@ autoinstall:
         plain_text_passwd: toor
         lock_passwd: false
   late-commands:
+    # Disable Predictable Network Interface names and use eth0
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT=="\1 net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=" net.ifnames/GRUB_CMDLINE_LINUX_DEFAULT="net.ifnames/g' /target/etc/default/grub
     - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /target/etc/ssh/sshd_config
+    - curtin in-target --target=/target -- update-grub
+  final_message: "System installation complete."
   version: 1

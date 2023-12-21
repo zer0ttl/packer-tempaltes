@@ -9,26 +9,26 @@ export DEBCONF_NONINTERACTIVE_SEEN=true
 echo "*** Running fixes.sh"
 
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=751636
-apt-get --assume-yes install libpam-systemd > /dev/null
+apt-get --assume-yes install libpam-systemd
 
 
 # disable root login using password
 echo "*** Disable root login using password"
-passwd -l root > /dev/null
-sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config > /dev/null
+passwd -l root
+sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
 
 # disable upgrade popup and unattended upgrades
 echo "*** Disable upgrade popup and unattended upgrades"
-sed -i 's/Prompt=.*/Prompt=never/' /etc/update-manager/release-upgrades > /dev/null
+sed -i 's/Prompt=.*/Prompt=never/' /etc/update-manager/release-upgrades
 apt-get --assume-yes --purge remove update-notifier unattended-upgrades  > /dev/null
 
 # disable apt-daily
 echo "*** Disable apt-daily"
-systemctl --quiet stop apt-daily.timer > /dev/null
-systemctl --quiet stop apt-daily-upgrade.timer > /dev/null
-systemctl --quiet disable apt-daily.timer > /dev/null
-systemctl --quiet disable apt-daily-upgrade.timer > /dev/null
-systemctl daemon-reload > /dev/null
+systemctl --quiet stop apt-daily.timer
+systemctl --quiet stop apt-daily-upgrade.timer
+systemctl --quiet disable apt-daily.timer
+systemctl --quiet disable apt-daily-upgrade.timer
+systemctl daemon-reload
 
 # reset the machine-id.
 # NB systemd will re-generate it on the next boot.

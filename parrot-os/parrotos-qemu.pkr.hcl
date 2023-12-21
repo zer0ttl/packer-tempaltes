@@ -62,17 +62,19 @@ variable "packer_templates_logs" {
 
 variable "parrotos_checksum_url" {
   type    = string
-  default = "https://deb.parrot.sh/parrot/iso/5.3/signed-hashes.txt"
+  # default = "https://deb.parrot.sh/parrot/iso/5.3/signed-hashes.txt"
+  default = "https://mirror.0xem.ma/parrot/iso/5.3/signed-hashes.txt"
 }
 
 variable "parrotos_iso_url" {
   type    = string
-  default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+  # default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+  default = "https://mirror.0xem.ma/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
 }
 
 variable "local_iso_path" {
   type    = string
-  default = "/path/to/your/local/iso/repository"
+  default = "/home/sudhir/isos/Parrot-architect-5.3_amd64.iso"
 }
 
 variable "ssh_username" {
@@ -121,7 +123,7 @@ source "qemu" "parrotos" {
   boot_command            = [
                            "<esc><wait>",
                            "install",
-                           " auto",
+                           " auto=true",
                            " priority=critical",
                            " locale=en_US.UTF-8",
                            " keyboard-configuration/xkb-keymap=us",
@@ -134,7 +136,7 @@ source "qemu" "parrotos" {
   headless                = "${var.headless}"
   http_directory          = "./http"
   iso_checksum            = "file:${var.parrotos_checksum_url}"
-  iso_urls                = ["${var.parrotos_iso_url}"]
+  iso_urls                = ["${var.parrotos_iso_url}","${var.local_iso_path}"]
   memory                  = "${var.memory}"
   output_directory        = "${var.name}-qemu"
   shutdown_command        = "${var.shutdown_command}"
@@ -157,6 +159,8 @@ build {
       "scripts/setup-vagrant-user.sh",
       "scripts/spice-agent.sh",
       "scripts/qemu-agent.sh",
+      "scripts/network.sh",
+      "scripts/fixes.sh",
       "scripts/updates.sh"
     ]
   }
