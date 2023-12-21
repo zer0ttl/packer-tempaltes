@@ -24,7 +24,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "25600"
+  default = "128000"
 }
 
 variable "headless" {
@@ -105,7 +105,7 @@ source "qemu" "ubuntu-server-2204" {
   headless         = "${var.headless}"
   http_directory   = "http"
   iso_checksum     = "file:${var.ubuntu_checksum_url}"
-  iso_urls         = ["${var.ubuntu_iso_url}"]
+  iso_urls         = ["${var.ubuntu_iso_url}", "${var.local_iso_path}"]
   memory           = "${var.memory}"
   output_directory = "${var.name}-qemu"
   shutdown_command = "echo 'vagrant' | sudo -S shutdown -P now"

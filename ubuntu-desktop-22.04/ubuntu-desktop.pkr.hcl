@@ -24,7 +24,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "25600"
+  default = "128000"
 }
 
 variable "headless" {
