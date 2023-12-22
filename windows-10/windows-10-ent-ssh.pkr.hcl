@@ -39,7 +39,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "51200"
+  default = "128000"
 }
 
 variable "headless" {
@@ -54,7 +54,7 @@ variable "iso_checksum" {
 
 variable "iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+  default = "/home/sudhir/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 }
 
 variable "memory" {
@@ -87,6 +87,11 @@ variable "ssh_username" {
   default = "vagrant"
 }
 
+variable "ssh_password" {
+  type    = string
+  default = "vagrant"
+}
+
 variable "ssh_wait_timeout" {
   type    = string
   default = "5h"
@@ -99,7 +104,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/mnt/hdd01/isos/virtio-win.iso"
+  default = "/home/sudhir/isos/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -148,7 +153,13 @@ source "qemu" "windows-10-ssh" {
                            "scripts/post-setup.ps1",
                            "scripts/opensshv2.ps1",
                            "scripts/SetupComplete.cmd",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep.bat",
+                           "scripts/enable-file-sharing.ps1",
+                           "scripts/bginfo.bgi",
+                           "scripts/bginfo.ps1",
+                           "scripts/agents.ps1",
+                           "scripts/redhat.cer",
+                           "scripts/fixes.ps1"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
@@ -179,9 +190,13 @@ build {
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.winrm_username}"
-    elevated_password    = "${var.winrm_password}"
+    elevated_user        = "${var.ssh_username}"
+    elevated_password    = "${var.ssh_password}"
     scripts = [
+      "scripts/bginfo.ps1",
+      "scripts/agents.ps1",
+      "scripts/fixes.ps1",
+      "scripts/enable-file-sharing.ps1",
       "scripts/post-setup.ps1"
     ]
   }
@@ -189,22 +204,14 @@ build {
   provisioner "windows-restart" {}
 
   post-processor "vagrant" {
-    keep_input_artifact  = true
+    keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile"
+    vagrantfile_template = "Vagrantfile-ssh"
   }
 
   post-processor "artifice" {
     files = ["${var.name}-{{.Provider}}.box"]
   }
 
-  post-processor "checksum" {
-    checksum_types = ["sha1", "sha256"]
-    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-  }
-
-  post-processor "manifest" {
-    output = "manifest.json"
-  }
 }

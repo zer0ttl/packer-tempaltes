@@ -1,0 +1,21 @@
+{
+    "description": "Windows 10 Enterprise\r\n",
+    "short_description": "Windows 10 Enterprise\r\n",
+    "name": "zer0ttl/windows-10-ssh",
+    "versions": [
+        {
+            "version": "2102.0.2308",
+            "status": "active",
+            "description_html": "<h4>Windows 10 Enterprise</h4>\n\n",
+            "description_markdown": "#### Windows 10 Enterprise\r\n\r\n",
+            "providers": [
+                {
+                    "name": "libvirt",
+                    "checksum": "6727cd4face0024b210083a99c6528a6753f876b08928ab2103405721fc097fc",
+                    "checksum_type": "sha256",
+                    "url": "file:///home/sudhir/projects/packer-templates/windows-10/windows-10-ssh-libvirt.box"
+                }
+            ]
+        }
+    ]
+}

@@ -187,20 +187,20 @@ build {
   provisioner "windows-restart" {}
 
   post-processor "vagrant" {
-    keep_input_artifact  = true
+    keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile"
   }
 
-  post-processor "artifice" {
-    files = ["${var.name}-{{.Provider}}.box"]
-  }
+#  post-processor "artifice" {
+#    files = ["${var.name}-{{.Provider}}.box"]
+#  }
 
-  post-processor "checksum" {
-    checksum_types = ["sha1", "sha256"]
-    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-  }
+#  post-processor "checksum" {
+#    checksum_types = ["sha1", "sha256"]
+#    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
+#  }
 
   post-processor "manifest" {
     output = "manifest.json"

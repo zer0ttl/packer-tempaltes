@@ -24,7 +24,7 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/bento/Autounattend.xml"
+  default = "http/winrm/Autounattend.xml"
 }
 
 variable "boot_wait" {
@@ -39,7 +39,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "128000"
+  default = "51200"
 }
 
 variable "headless" {
@@ -52,14 +52,9 @@ variable "iso_checksum" {
   default = "iso.sha256"
 }
 
-variable "local_iso_path" {
-  type    = string
-  default = "/home/sudhir/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
-}
-
 variable "iso_url" {
-  type   = string
-  default = ""
+  type    = string
+  default = "/mnt/hdd01/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 }
 
 variable "memory" {
@@ -69,12 +64,12 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "windows-10"
+  default = "windows-10-minimal-winrm"
 }
 
 variable "packer_images_output_dir" {
   type    = string
-  default = "output"
+  default = "output-winrm"
 }
 
 variable "ssh_private_key_file" {
@@ -104,7 +99,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/home/sudhir/isos/virtio-win.iso"
+  default = "/mnt/hdd01/isos/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -140,7 +135,7 @@ variable "vnc_port_min" {
 }
 
 # sources
-source "qemu" "windows-10" {
+source "qemu" "windows-10-minimal-winrm" {
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
   communicator        = "winrm"
@@ -150,25 +145,14 @@ source "qemu" "windows-10" {
   floppy_files        = [
                            "${var.autounattend}",
                            "${var.unattend}",
-                           "scripts/configureRemotingForAnsible.ps1",
-                           "scripts/opensshv2.ps1",
-                           "scripts/disable-winrm.ps1",
-                           "scripts/enable-file-sharing.ps1",
-                           "scripts/enable-winrm.bat",
-                           "scripts/fixnetwork.ps1",
-                           "scripts/bginfo.bgi",
-                           "scripts/bginfo.ps1",
-                           "scripts/agents.ps1",
                            "scripts/post-setup.ps1",
                            "scripts/SetupComplete.cmd",
-                           "scripts/redhat.cer",
-                           "scripts/fixes.ps1",
                            "scripts/sysprep.bat"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
   iso_checksum        = "file:${var.iso_checksum}"
-  iso_urls            = ["${var.local_iso_path}"]
+  iso_urls            = ["${var.iso_url}"]
   net_device          = "virtio-net"
   qemuargs            = [
                            ["-cdrom", "${var.virtio_win_iso}"]
@@ -177,9 +161,6 @@ source "qemu" "windows-10" {
   output_directory    = "${var.packer_images_output_dir}"
   shutdown_command    = "a:\\sysprep.bat"
   shutdown_timeout    = "${var.shutdown_wait_timeout}"
-  ssh_private_key_file = "${var.ssh_private_key_file}"
-  ssh_username        = "${var.ssh_username}"
-  ssh_wait_timeout    = "${var.ssh_wait_timeout}"
   vm_name             = "${var.name}"
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
@@ -192,18 +173,13 @@ source "qemu" "windows-10" {
 # builds
 build {
   sources = [
-    "source.qemu.windows-10"
+    "source.qemu.windows-10-minimal-winrm"
   ]
 
   provisioner "powershell" {
     elevated_user        = "${var.winrm_username}"
     elevated_password    = "${var.winrm_password}"
     scripts = [
-      "scripts/opensshv2.ps1",
-      "scripts/bginfo.ps1",
-      "scripts/agents.ps1",
-      "scripts/fixes.ps1",
-      "scripts/enable-file-sharing.ps1",
       "scripts/post-setup.ps1"
     ]
   }
@@ -211,6 +187,7 @@ build {
   provisioner "windows-restart" {}
 
   post-processor "vagrant" {
+    keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile"
@@ -222,7 +199,10 @@ build {
 
 #  post-processor "checksum" {
 #    checksum_types = ["sha1", "sha256"]
-#    output = "packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-  }
+#    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
+#  }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+  }
 }

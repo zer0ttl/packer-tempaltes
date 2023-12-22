@@ -24,7 +24,7 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/bento/Autounattend.xml"
+  default = "http/ssh/Autounattend.xml"
 }
 
 variable "boot_wait" {
@@ -52,14 +52,9 @@ variable "iso_checksum" {
   default = "iso.sha256"
 }
 
-variable "local_iso_path" {
+variable "iso_url" {
   type    = string
   default = "/home/sudhir/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
-}
-
-variable "iso_url" {
-  type   = string
-  default = ""
 }
 
 variable "memory" {
@@ -69,12 +64,12 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "windows-10"
+  default = "windows-10-minimal-ssh"
 }
 
 variable "packer_images_output_dir" {
   type    = string
-  default = "output"
+  default = "output-ssh"
 }
 
 variable "ssh_private_key_file" {
@@ -88,6 +83,11 @@ variable "shutdown_wait_timeout" {
 }
 
 variable "ssh_username" {
+  type    = string
+  default = "vagrant"
+}
+
+variable "ssh_password" {
   type    = string
   default = "vagrant"
 }
@@ -140,35 +140,25 @@ variable "vnc_port_min" {
 }
 
 # sources
-source "qemu" "windows-10" {
+source "qemu" "windows-10-minimal-ssh" {
   accelerator         = "${var.accelerator}"
   boot_wait           = "${var.boot_wait}"
-  communicator        = "winrm"
+  communicator        = "ssh"
   cpus                = "${var.cpus}"
   disk_interface      = "virtio"
   disk_size           = "${var.disk_size}"
   floppy_files        = [
                            "${var.autounattend}",
                            "${var.unattend}",
-                           "scripts/configureRemotingForAnsible.ps1",
-                           "scripts/opensshv2.ps1",
-                           "scripts/disable-winrm.ps1",
-                           "scripts/enable-file-sharing.ps1",
-                           "scripts/enable-winrm.bat",
-                           "scripts/fixnetwork.ps1",
-                           "scripts/bginfo.bgi",
-                           "scripts/bginfo.ps1",
-                           "scripts/agents.ps1",
                            "scripts/post-setup.ps1",
+                           "scripts/opensshv2.ps1",
                            "scripts/SetupComplete.cmd",
-                           "scripts/redhat.cer",
-                           "scripts/fixes.ps1",
                            "scripts/sysprep.bat"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
   iso_checksum        = "file:${var.iso_checksum}"
-  iso_urls            = ["${var.local_iso_path}"]
+  iso_urls            = ["${var.iso_url}"]
   net_device          = "virtio-net"
   qemuargs            = [
                            ["-cdrom", "${var.virtio_win_iso}"]
@@ -184,26 +174,19 @@ source "qemu" "windows-10" {
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
-  winrm_password      = "${var.winrm_password}"
-  winrm_timeout       = "${var.winrm_timeout}"
-  winrm_username      = "${var.winrm_username}"
 }
+
 
 # builds
 build {
   sources = [
-    "source.qemu.windows-10"
+    "source.qemu.windows-10-minimal-ssh"
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.winrm_username}"
-    elevated_password    = "${var.winrm_password}"
+    elevated_user        = "${var.ssh_username}"
+    elevated_password    = "${var.ssh_password}"
     scripts = [
-      "scripts/opensshv2.ps1",
-      "scripts/bginfo.ps1",
-      "scripts/agents.ps1",
-      "scripts/fixes.ps1",
-      "scripts/enable-file-sharing.ps1",
       "scripts/post-setup.ps1"
     ]
   }
@@ -211,6 +194,7 @@ build {
   provisioner "windows-restart" {}
 
   post-processor "vagrant" {
+    keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile"
@@ -222,7 +206,10 @@ build {
 
 #  post-processor "checksum" {
 #    checksum_types = ["sha1", "sha256"]
-#    output = "packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-  }
+#    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
+#  }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+  }
 }
