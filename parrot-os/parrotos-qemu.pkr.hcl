@@ -24,7 +24,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "25600"
+  default = "128000"
 }
 
 variable "distro" {
@@ -42,7 +42,7 @@ variable "headless" {
 variable "memory" {
   type = string
   description = "Amount of RAM to be assigned to the vm"
-  default = "2048"
+  default = "4096"
 }
 
 variable "name" {
@@ -62,14 +62,14 @@ variable "packer_templates_logs" {
 
 variable "parrotos_checksum_url" {
   type    = string
-  # default = "https://deb.parrot.sh/parrot/iso/5.3/signed-hashes.txt"
-  default = "https://mirror.0xem.ma/parrot/iso/5.3/signed-hashes.txt"
+  default = "https://deb.parrot.sh/parrot/iso/5.3/signed-hashes.txt"
+  #default = "https://mirror.0xem.ma/parrot/iso/5.3/signed-hashes.txt"
 }
 
 variable "parrotos_iso_url" {
   type    = string
-  # default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
-  default = "https://mirror.0xem.ma/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+  default = "https://deb.parrot.sh/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
+  #default = "https://mirror.0xem.ma/parrot/iso/5.3/Parrot-architect-5.3_amd64.iso"
 }
 
 variable "local_iso_path" {
