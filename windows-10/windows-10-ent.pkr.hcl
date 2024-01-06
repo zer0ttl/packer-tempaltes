@@ -189,6 +189,9 @@ source "qemu" "windows-10-ent" {
   vnc_bind_address    = "${var.vnc_vrdp_bind_address}"
   vnc_port_max        = "${var.vnc_port_max}"
   vnc_port_min        = "${var.vnc_port_min}"
+  winrm_password      = "${var.winrm_password}"
+  winrm_timeout       = "${var.winrm_timeout}"
+  winrm_username      = "${var.winrm_username}"
 }
 
 # builds
@@ -203,7 +206,6 @@ build {
     scripts = [
       "scripts/bginfo.ps1",
       "scripts/agents.ps1",
-      "scripts/enable-win-updates.ps1",
       "scripts/fixes.ps1",
       "scripts/configure-power.ps1",
       "scripts/disable-uac.ps1",
