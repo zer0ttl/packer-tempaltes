@@ -13,6 +13,10 @@ packer {
       source  = "github.com/hashicorp/vagrant"
       version = "~> 1"
     }
+    windows-update = {
+      version = "0.15.0"
+      source = "github.com/rgl/windows-update"
+    }
   }
 }
 
@@ -200,7 +204,6 @@ build {
       "scripts/bginfo.ps1",
       "scripts/agents.ps1",
       "scripts/enable-win-updates.ps1",
-      "scripts/update-windows.ps1",
       "scripts/fixes.ps1",
       "scripts/configure-power.ps1",
       "scripts/disable-uac.ps1",
@@ -209,9 +212,7 @@ build {
       "scripts/post-setup.ps1"
     ]
   }
-
-  provisioner "windows-restart" {}
-
+  
   post-processor "vagrant" {
     keep_input_artifact  = false
     compression_level    = 9

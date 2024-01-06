@@ -42,10 +42,15 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
 
 net start wuauserv
 
+# Change your TLS version to 1.2
+# Ref: https://devblogs.microsoft.com/powershell/when-powershellget-v1-fails-to-install-the-nuget-provider/
+Write-Verbose -Message 'Configure Tls12 and ssl3'
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::'ssl3', 'Tls12'
+
 # Install Powershell module for windows updates
 Install-PackageProvider -Name NuGet -Force
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-Module -Name PSWindowsUpdate
+Install-Module -Name PSWindowsUpdate -Force
 
 # Check for updates from Microsoft (in addition to Windows updates)
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false

@@ -36,21 +36,21 @@ Do {
 		LogWrite "No More Updates"
 		break
 	}
-	if (!(Compare-Object $updates $prevUpdates)) {
-	    LogWrite "Updates Did Not Install - Aborting"
-	    break
-	}
+	# if (!(Compare-Object $updates $prevUpdates)) {
+	#     LogWrite "Updates Did Not Install - Aborting"
+	#     break
+	# }
 	LogWrite "Installing Updates"
 	Install-WindowsUpdate -MicrosoftUpdate -IgnoreUserInput -AcceptAll -IgnoreReboot
-	LogWrite "Updates Installed, Checking Reboot Status"
-	$rebootRequired = Get-WURebootStatus -Silent
-	if ($rebootRequired) {
-        Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File $($ScriptPath)"
-		LogWrite "Restart Required - Restarting..."
-		Restart-Computer
-		sleep 5
-	}
-	$prevUpdates = $updates
+	# LogWrite "Updates Installed, Checking Reboot Status"
+	# $rebootRequired = Get-WURebootStatus -Silent
+	# if ($rebootRequired) {
+    #     Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File $($ScriptPath)"
+	# 	LogWrite "Restart Required - Restarting..."
+	# 	Restart-Computer -Force
+	# 	sleep 5
+	# }
+	# $prevUpdates = $updates
 } While ($true)
 
 $prop = (Get-ItemProperty $RegistryKey).$RegistryEntry
