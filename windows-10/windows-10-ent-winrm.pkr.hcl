@@ -34,12 +34,12 @@ variable "boot_wait" {
 
 variable "cpus" {
   type    = string
-  default = "4"
+  default = "2"
 }
 
 variable "disk_size" {
   type    = string
-  default = "51200"
+  default = "128000"
 }
 
 variable "headless" {
@@ -59,7 +59,7 @@ variable "iso_url" {
 
 variable "memory" {
   type    = string
-  default = "4096"
+  default = "8192"
 }
 
 variable "name" {
@@ -99,7 +99,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/mnt/hdd01/isos/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -147,7 +147,16 @@ source "qemu" "windows-10-winrm" {
                            "${var.unattend}",
                            "scripts/post-setup.ps1",
                            "scripts/SetupComplete.cmd",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep.bat",
+                           "scripts/configure-power.ps1",
+                           "scripts/disable-uac.ps1",
+                           "scripts/enable-file-sharing.ps1",
+                           "scripts/enable-remote-desktop.ps1",
+                           "scripts/bginfo.bgi",
+                           "scripts/bginfo.ps1",
+                           "scripts/agents.ps1",
+                           "scripts/redhat.cer",
+                           "scripts/fixes.ps1"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
@@ -180,6 +189,13 @@ build {
     elevated_user        = "${var.winrm_username}"
     elevated_password    = "${var.winrm_password}"
     scripts = [
+      "scripts/bginfo.ps1",
+      "scripts/agents.ps1",
+      "scripts/fixes.ps1",
+      "scripts/configure-power.ps1",
+      "scripts/disable-uac.ps1",
+      "scripts/enable-file-sharing.ps1",
+      "scripts/enable-remote-desktop.ps1",
       "scripts/post-setup.ps1"
     ]
   }
@@ -193,16 +209,4 @@ build {
     vagrantfile_template = "Vagrantfile"
   }
 
-#  post-processor "artifice" {
-#    files = ["${var.name}-{{.Provider}}.box"]
-#  }
-
-#  post-processor "checksum" {
-#    checksum_types = ["sha1", "sha256"]
-#    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-#  }
-
-  post-processor "manifest" {
-    output = "manifest.json"
-  }
 }

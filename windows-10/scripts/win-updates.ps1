@@ -1,3 +1,20 @@
+# Setup and configure Bginfo.exe
+#
+
+Set-StrictMode -Version Latest
+$ProgressPreference = 'SilentlyContinue'
+$ErrorActionPreference = 'Stop'
+
+trap {
+    Write-Host
+    Write-Host "ERROR: $_"
+    ($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1' | Write-Host
+    ($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1' | Write-Host
+    Write-Host
+    Write-Host 'Sleeping for 60m to give you time to look around the virtual machine before self-destruction...'
+    Start-Sleep -Seconds (60*60)
+    Exit 1
+}
 
 $Logfile = "C:\Windows\Temp\win-updates.log"
 $RegistryKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
@@ -41,6 +58,3 @@ if ($prop) {
     LogWrite "Restart Registry Entry Exists - Removing It"
     Remove-ItemProperty -Path $RegistryKey -Name $RegistryEntry -ErrorAction SilentlyContinue
 }
-
-# LogWrite "Calling openssh"
-# Invoke-Expression "f:\openssh.ps1 -AutoStart"

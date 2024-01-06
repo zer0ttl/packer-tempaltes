@@ -104,7 +104,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/home/sudhir/isos/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -154,7 +154,10 @@ source "qemu" "windows-10-ssh" {
                            "scripts/opensshv2.ps1",
                            "scripts/SetupComplete.cmd",
                            "scripts/sysprep.bat",
+                           "scripts/configure-power.ps1",
+                           "scripts/disable-uac.ps1",
                            "scripts/enable-file-sharing.ps1",
+                           "scripts/enable-remote-desktop.ps1",
                            "scripts/bginfo.bgi",
                            "scripts/bginfo.ps1",
                            "scripts/agents.ps1",
@@ -196,7 +199,10 @@ build {
       "scripts/bginfo.ps1",
       "scripts/agents.ps1",
       "scripts/fixes.ps1",
+      "scripts/configure-power.ps1",
+      "scripts/disable-uac.ps1",
       "scripts/enable-file-sharing.ps1",
+      "scripts/enable-remote-desktop.ps1",
       "scripts/post-setup.ps1"
     ]
   }
@@ -208,10 +214,6 @@ build {
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
     vagrantfile_template = "Vagrantfile-ssh"
-  }
-
-  post-processor "artifice" {
-    files = ["${var.name}-{{.Provider}}.box"]
   }
 
 }

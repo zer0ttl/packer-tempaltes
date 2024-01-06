@@ -18,7 +18,6 @@ trap {
 
 Write-Host "Some fixes.."
 
-
 # set global EULA acceptance for SysInternals tools
 $regPath = "HKCU:\Software\Sysinternals"
 if (Test-Path -Path $regPath -ErrorAction SilentlyContinue) {
@@ -29,8 +28,8 @@ if (Test-Path -Path $regPath -ErrorAction SilentlyContinue) {
 
 # New Network Window Off
 # %SystemRoot%\System32\reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
-reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 # New-Item -Path "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" -Force
+reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
 # Show file extensions in Explorer
 # %SystemRoot%\System32\reg.exe ADD HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ /v HideFileExt /t REG_DWORD /d 0 /f
@@ -42,18 +41,6 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 # Enable QuickEdit Mode
 # %SystemRoot%\System32\reg.exe ADD HKCU\Console /v QuickEdit /t REG_DWORD /d 1 /f
 Set-ItemProperty -Path "HKCU:\Console" -Name QuickEdit -Value 1 -Force
-
-# Zero Hibernation File
-# %SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateFileSizePercent /t REG_DWORD /d 0 /f
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HibernateFileSizePercent" -Value 0 -Force
-
-# Disable Hibernation Mode
-# %SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateEnabled /t REG_DWORD /d 0 /f
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HibernateEnabled" -Value 0 -Force
-
-# Disable UAC
-# %SystemRoot%\System32\reg.exe ADD HKLM\Software\Microsoft\Windows\CurrentVersion\policies\system\ /v EnableLUA /t REG_DWORD /d 0 /f
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system\" -Name "EnableLUA" -Value 0 -Force
 
 # Allow ICMP ping in firewall
 netsh advfirewall firewall add rule name="ICMP Allow incoming V4 echo request" protocol=icmpv4:8,any dir=in action=allow

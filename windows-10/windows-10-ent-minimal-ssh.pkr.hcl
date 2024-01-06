@@ -104,7 +104,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/home/sudhir/isos/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
 }
 
 variable "winrm_password" {
