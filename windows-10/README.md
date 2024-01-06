@@ -1,6 +1,16 @@
 # Windows 10
 
-> SSH is the preferred method as it is easy to ssh into the box with vagrant ssh.
+> SSH is the preferred method as it is easy to ssh into the box with vagrant ssh from a linux system.
+
+## Packer Templates
+
+| Template Name | Description |
+| -- | -- |
+| `windows-10-ent-ssh.pkr.hcl` | Uses SSH as communicator, installs qemu & spice agents, runs fixes. |
+| `windows-10-ent-minimal-ssh.pkr.hcl` | Minimal SSH config for communication. No additional software or config installed. This tempalte can be used as a base tempalte to build upon. |
+| `windows-10-ent-winrm.pkr.hcl` | Uses winrm as communicator, installs qemu & spice agents, runs fixes. |
+| `windows-10-ent-minimal-winrm.pkr.hcl` | Minimal winrm config for communication. No additional software or config installed. This tempalte can be used as a base tempalte to build upon. |
+| `windows-10-ent.pkr.hcl` | Uses SSH and winrm as communicator, installs qemu & spice agents, runs fixes, enables windows update and updates the box to the latest available updates, enables rdp, file-sharing. |
 
 ## About
 
@@ -26,6 +36,17 @@
 		- Sets up `vagrant` as administrator with `vagrant` password.
 		- Sets computer name to `vagrantvm`.
 - SSH config has been tested and a working remote management session can be established with the system.
+- A series of customization scripts are run using the *powershell* provisioner.
+    - `scripts/bginfo.ps1`: Installs bginfo and configures it.
+    - `scripts/agents.ps1`: Installs Spice tools and Virtio Windows guest tools.
+    - `scripts/enable-win-updates.ps1`: Enable automatic Windows updates.
+    - `scripts/update-windows.ps1`: Update Windows to the latest version.
+    - `scripts/fixes.ps1`: Do some UI and other fixes.
+    - `scripts/configure-power.ps1`: Configure hibernation, sleep, etc.
+    - `scripts/disable-uac.ps1`: Disable UAC.
+    - `scripts/enable-file-sharing.ps1`: Enable File Sharing.
+    - `scripts/enable-remote-desktop.ps1`: Enable Remote Desktop.
+    - `scripts/post-setup.ps1`: See below.
 - A powershell *post-provisioner* runs the script `post-setup.ps1` after OS has been installed on the system.
 	- This script copies the `SetupComplete.cmd` to `C:\Windows\setup\scripts\` directory. The contents of this script are run after the first boot post sysprep.
 	- This script does the following:
@@ -92,16 +113,6 @@ vagrant up
 ![Alt text](<screenshot-vagrant-up.png>)
 
 ![Alt text](<screenshot-vm.png>)
-
-## Packer Templates
-
-| Template Name | Description |
-| -- | -- |
-| `windows-10-ent-ssh.pkr.hcl` | Uses SSH as communicator, installs qemu & spice agents, runs fixes. |
-| `windows-10-ent-minimal-ssh.pkr.hcl` | Minimal SSH config for communication. No additional software or config installed |
-| `windows-10-ent-winrm.pkr.hcl` | Uses winrm as communicator, installs qemu & spice agents, runs fixes. |
-| `windows-10-ent-minimal-winrm.pkr.hcl` | Minimal winrm config for communication. No additional software or config installed |
-| `windows-10-ent.pkr.hcl` | Uses SSH and winrm as communicator, installs qemu & spice agents, runs fixes. |
 
 ## Vagrantfiles
 
