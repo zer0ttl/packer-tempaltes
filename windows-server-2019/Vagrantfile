@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "zer0ttl/windows-server-2022-standard"
+  config.vm.guest = :windows
+  config.vm.box_check_update = false
+  config.vm.define "detektlabs-winsrv2022-001"
+  config.vm.hostname = "detektlabs-winsrv2022-001"
+
+  # network config
+  config.vm.network :private_network,
+    :type => "dhcp",
+    :libvirt__network_name => "detection-lab-nat"
+  config.vm.network :forwarded_port, guest: 22, host: 22, id: "ssh", auto_correct:true
+  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct:true
+  config.vm.network :forwarded_port, guest: 5986, host: 5986, id: "winrm-ssl", auto_correct:true
+  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct:true
+  
+  # windows specific config
+  config.vm.boot_timeout      = 3000
+  config.vm.communicator      = "winssh"
+  config.winssh.shell         = "powershell"
+
+  # when using winrm as communicator
+  #config.vm.communicator             = "winrm"
+  #config.winrm.username              = "winrm"
+  #config.winrm.password              = "winrm"
+  #config.winrm.transport             = :ssl
+  #config.winrm.ssl_peer_verification = false
+
+  config.vm.provider :libvirt do |guest|
+    guest.default_prefix = ""
+    guest.cpus = 2
+    guest.memory = 8192
+    guest.mgmt_attach = false
+    guest.graphics_type = "spice"
+    guest.graphics_port = -1
+    guest.graphics_ip = "0.0.0.0"
+    guest.graphics_autoport = "yes"
+    guest.video_type     = "virtio"
+    guest.channel :type  => 'spicevmc', :target_name => 'com.redhat.spice.0',     :target_type => 'virtio'
+    guest.channel :type  => 'unix',     :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
+    guest.random  :model => 'random'
+  end
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+end
