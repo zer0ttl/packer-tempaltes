@@ -1,5 +1,64 @@
 # Windows 10
 
+> SSH is the preferred method as it is easy to ssh into the box with vagrant ssh from a linux system.
+
+## Packer Templates
+
+| Template Name | Description |
+| -- | -- |
+| `windows-10-ent-ssh.pkr.hcl` | Uses SSH as communicator, installs qemu & spice agents, runs fixes. |
+| `windows-10-ent-minimal-ssh.pkr.hcl` | Minimal SSH config for communication. No additional software or config installed. This tempalte can be used as a base tempalte to build upon. |
+| `windows-10-ent-winrm.pkr.hcl` | Uses winrm as communicator, installs qemu & spice agents, runs fixes. |
+| `windows-10-ent-minimal-winrm.pkr.hcl` | Minimal winrm config for communication. No additional software or config installed. This tempalte can be used as a base tempalte to build upon. |
+| `windows-10-ent.pkr.hcl` | Uses SSH and winrm as communicator, installs qemu & spice agents, runs fixes, enables windows update and updates the box to the latest available updates, enables rdp, file-sharing. |
+
+## About
+
+- The `http/ssh/Autounattend.xml` contains minimal config for OpenSSH support. The `Autounattend.xml` sets the following configs:
+	- user full name: `Vagrant`
+	- org name: `Detekt Labs`
+	- image name: `Windows 10 Enterprise Evaluation`
+	- installs all `virtio` drivers.
+	- username: `vagrant` 
+	- password: `vagrant`
+	- user added to group: `administrators`
+	- Runs the following `FirstLogonCommands`:
+		- Set Execution Policy for 64 Bit PowerShell to `RemoteSigned`
+		- Set Execution Policy for 32 Bit PowerShell to `RemoteSigned` 
+		- Disable password expiration for vagrant user
+		- Install OpenSSH using `opensshv2.ps1`
+- Once the system has been installed, the following files are run:
+	- `post-setup.ps1`: Copies the `SetupComplete.cmd` file for execution on first boot.
+- The shutdown command is `a:\\sysprep.bat`
+	- This configures the windows firewall to block winrm and ssh to avoid vagrant connecting to box before inital boot (post sysprep) is completed.
+	- This then runs `sysprep` with `unattend.xml` which does the following:
+		- Sets timezone to UTC.
+		- Sets up `vagrant` as administrator with `vagrant` password.
+		- Sets computer name to `vagrantvm`.
+- SSH config has been tested and a working remote management session can be established with the system.
+- A series of customization scripts are run using the *powershell* provisioner.
+    - `scripts/bginfo.ps1`: Installs bginfo and configures it.
+    - `scripts/agents.ps1`: Installs Spice tools and Virtio Windows guest tools.
+    - `scripts/enable-win-updates.ps1`: Enable automatic Windows updates.
+    - `scripts/update-windows.ps1`: Update Windows to the latest version.
+    - `scripts/fixes.ps1`: Do some UI and other fixes.
+    - `scripts/configure-power.ps1`: Configure hibernation, sleep, etc.
+    - `scripts/disable-uac.ps1`: Disable UAC.
+    - `scripts/enable-file-sharing.ps1`: Enable File Sharing.
+    - `scripts/enable-remote-desktop.ps1`: Enable Remote Desktop.
+    - `scripts/post-setup.ps1`: See below.
+- A powershell *post-provisioner* runs the script `post-setup.ps1` after OS has been installed on the system.
+	- This script copies the `SetupComplete.cmd` to `C:\Windows\setup\scripts\` directory. The contents of this script are run after the first boot post sysprep.
+	- This script does the following:
+		- Enables and allows winrm in firewall rules.
+		- Allows ssh in firewall rules.
+		- Sets the connection profile to *Private* for all interfaces.
+		- Rearms the license using `slmgr`
+- The Packer shutdown command runs the `a:\sysprep.bat` script. This syspreps the image using the `a:\unattend.xml` answer file. It also puts the following two firewall rules in *Block* mode.
+	- `Windows Remote Management (HTTP-In)`
+	- `OpenSSH SSH Server (sshd)`
+	- This is in place to block vagrant from connecting to the box immediately after the box has booted and stops it from messing from the first boot post sysprep.
+
 ## Usage
 
 - Validate the packer templates.
@@ -54,16 +113,6 @@ vagrant up
 ![Alt text](<screenshot-vagrant-up.png>)
 
 ![Alt text](<screenshot-vm.png>)
-
-## Packer Templates
-
-| Template Name | Description |
-| -- | -- |
-| `windows-10-ent-ssh.pkr.hcl` | Uses SSH as communicator, installs qemu & spice agents, runs fixes. |
-| `windows-10-ent-minimal-ssh.pkr.hcl` | Minimal SSH config for communication. No additional software or config installed |
-| `windows-10-ent-winrm.pkr.hcl` | Uses winrm as communicator, installs qemu & spice agents, runs fixes. |
-| `windows-10-ent-minimal-winrm.pkr.hcl` | Minimal winrm config for communication. No additional software or config installed |
-| `windows-10-ent.pkr.hcl` | Uses SSH and winrm as communicator, installs qemu & spice agents, runs fixes. |
 
 ## Vagrantfiles
 

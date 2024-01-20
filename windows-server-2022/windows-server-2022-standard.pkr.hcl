@@ -39,7 +39,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "51200"
+  default = "128000"
 }
 
 variable "headless" {
@@ -54,7 +54,7 @@ variable "iso_checksum" {
 
 variable "iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/win2022.iso"
+  default = "https://software-static.download.prss.microsoft.com/sg/download/888969d5-f34g-4e03-ac9d-1f9786c66749/SERVER_EVAL_x64FRE_en-us.iso"
 }
 
 variable "memory" {
@@ -99,7 +99,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/mnt/hdd01/isos/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -151,8 +151,14 @@ source "qemu" "windows_2022_standard" {
                            "scripts/bginfo.ps1",
                            "scripts/agents.ps1",
                            "scripts/redhat.cer",
+                           "scripts/configure-power.ps1",
+                           "scripts/disable-uac.ps1",
+                           "scripts/enable-file-sharing.ps1",
+                           "scripts/enable-remote-desktop.ps1",
                            "scripts/fixes.ps1",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep.bat",
+                           "scripts/SetupComplete.cmd",
+                           "scripts/post-setup.ps1"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
@@ -179,9 +185,22 @@ source "qemu" "windows_2022_standard" {
 build {
   sources = ["source.qemu.windows_2022_standard"]
 
-  provisioner "windows-restart" {}
+  provisioner "powershell" {
+    elevated_user        = "${var.winrm_username}"
+    elevated_password    = "${var.winrm_password}"
+    scripts = [
+      "scripts/bginfo.ps1",
+      "scripts/agents.ps1",
+      "scripts/fixes.ps1",
+      "scripts/configure-power.ps1",
+      "scripts/disable-uac.ps1",
+      "scripts/enable-file-sharing.ps1",
+      "scripts/enable-remote-desktop.ps1",
+      "scripts/post-setup.ps1"
+    ]
+  }
 
-#  provisioner "breakpoint" {}
+  provisioner "windows-restart" {}
 
   post-processor "vagrant" {
     compression_level    = 9

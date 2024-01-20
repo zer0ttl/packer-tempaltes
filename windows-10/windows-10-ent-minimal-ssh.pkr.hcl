@@ -104,7 +104,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "/home/sudhir/isos/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -197,19 +197,7 @@ build {
     keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile"
+    vagrantfile_template = "Vagrantfile-ssh"
   }
 
-#  post-processor "artifice" {
-#    files = ["${var.name}-{{.Provider}}.box"]
-#  }
-
-#  post-processor "checksum" {
-#    checksum_types = ["sha1", "sha256"]
-#    output = "${var.packer_images_output_dir}/packer_{{.BuildName}}_{{.ChecksumType}}.checksum"
-#  }
-
-  post-processor "manifest" {
-    output = "manifest.json"
-  }
 }

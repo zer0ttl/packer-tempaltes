@@ -208,18 +208,59 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f</CommandLine>
+                    <Description>Network prompt</Description>
                     <Order>3</Order>
-                    <CommandLine>%windir%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c netsh advfirewall Firewall set rule group="Remote Desktop" new enable=yes</CommandLine>
+                    <Description>Enable Remote Desktop firewall rules</Description>
+                    <Order>4</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c net user vagrant /active:yes</CommandLine>
+                    <Description>Enable Admin User</Description>
+                    <Order>6</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</CommandLine>
+                    <Description>Set Power Scheme to High Performance</Description>
+                    <Order>7</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bginfo.ps1</CommandLine>
+                    <Description>Setup and Configure BgInfo</Description>
+                    <Order>8</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\fixes.ps1</CommandLine>
+                    <Description>Some Common Fixes</Description>
+                    <Order>9</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
+                    <Order>16</Order>
                     <Description>Disable password expiration for vagrant user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\agents.ps1</CommandLine>
+                    <Order>24</Order>
+                    <Description>Install Virtio Guest Tools</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\configureRemotingForAnsible.ps1</CommandLine>
-                    <Order>4</Order>
+                    <Order>91</Order>
                     <Description>Enable winrm</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\opensshv2.ps1</CommandLine>
-                    <Order>5</Order>
+                    <Order>92</Order>
                     <Description>Enable ssh</Description>
                 </SynchronousCommand>
             </FirstLogonCommands>
