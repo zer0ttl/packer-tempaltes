@@ -99,7 +99,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -147,12 +147,15 @@ source "qemu" "windows_2022_core" {
                            "${var.unattend}",
                            "scripts/configureRemotingForAnsible.ps1",
                            "scripts/opensshv2.ps1",
-                           "scripts/bginfo.bgi",
-                           "scripts/bginfo.ps1",
                            "scripts/agents.ps1",
                            "scripts/redhat.cer",
+                           "scripts/configure-power.ps1",
+                           "scripts/enable-file-sharing.ps1",
+                           "scripts/enable-remote-desktop.ps1",
                            "scripts/fixes.ps1",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep.bat",
+                           "scripts/SetupComplete.cmd",
+                           "scripts/post-setup.ps1"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
@@ -178,6 +181,19 @@ source "qemu" "windows_2022_core" {
 # builds
 build {
   sources = ["source.qemu.windows_2022_core"]
+
+  provisioner "powershell" {
+    elevated_user        = "${var.winrm_username}"
+    elevated_password    = "${var.winrm_password}"
+    scripts = [
+      "scripts/agents.ps1",
+      "scripts/fixes.ps1",
+      "scripts/configure-power.ps1",
+      "scripts/enable-file-sharing.ps1",
+      "scripts/enable-remote-desktop.ps1",
+      "scripts/post-setup.ps1"
+    ]
+  }
 
   provisioner "windows-restart" {}
 
