@@ -99,7 +99,7 @@ variable "unattend" {
 
 variable "virtio_win_iso" {
   type    = string
-  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.240-1/virtio-win.iso"
+  default = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
 }
 
 variable "winrm_password" {
@@ -178,6 +178,21 @@ source "qemu" "windows_2022_standard" {
 # builds
 build {
   sources = ["source.qemu.windows_2022_standard"]
+
+  provisioner "powershell" {
+    elevated_user        = "${var.winrm_username}"
+    elevated_password    = "${var.winrm_password}"
+    scripts = [
+      "scripts/bginfo.ps1",
+      "scripts/agents.ps1",
+      "scripts/fixes.ps1",
+      "scripts/configure-power.ps1",
+      "scripts/disable-uac.ps1",
+      "scripts/enable-file-sharing.ps1",
+      "scripts/enable-remote-desktop.ps1",
+      "scripts/post-setup.ps1"
+    ]
+  }
 
   provisioner "windows-restart" {}
 
