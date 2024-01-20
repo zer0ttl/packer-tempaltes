@@ -21,7 +21,7 @@ cat > ${metadata_file} <<END
     "name": "${user}/${name}",
     "versions": [
         {
-            "version": "2102.0.2308",
+            "version": "20348.2227",
             "status": "active",
             "description_html": "<h4>Windows Server 2022 ${version}</h4>\n\n",
             "description_markdown": "#### Windows Server 2022 ${version}\r\n\r\n",

@@ -151,8 +151,14 @@ source "qemu" "windows_2022_standard" {
                            "scripts/bginfo.ps1",
                            "scripts/agents.ps1",
                            "scripts/redhat.cer",
+                           "scripts/configure-power.ps1",
+                           "scripts/disable-uac.ps1",
+                           "scripts/enable-file-sharing.ps1",
+                           "scripts/enable-remote-desktop.ps1",
                            "scripts/fixes.ps1",
-                           "scripts/sysprep.bat"
+                           "scripts/sysprep.bat",
+                           "scripts/SetupComplete.cmd",
+                           "scripts/post-setup.ps1"
                         ]
   format              = "qcow2"
   headless            = "${var.headless}"
