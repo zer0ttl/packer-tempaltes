@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :libvirt do |guest|
     guest.default_prefix = ""
-    guest.cpus = 4
+    guest.cpus = 2
     guest.memory = 4096
     guest.mgmt_attach = false
     guest.graphics_type = "spice"
