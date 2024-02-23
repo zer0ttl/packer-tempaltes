@@ -2,21 +2,21 @@
 
 metadata_file="metadata.json"
 user="zer0ttl"
-box_file="parrotos-5.3-libvirt.box"
+box_file="parrotos-6.0-libvirt.box"
 box_file_path=$(realpath ${box_file})
 box_file_checksum=$(sha256sum ${box_file_path} | cut -d ' ' -f 1)
 
 cat > ${metadata_file} <<END
 {
-    "description": "ParrotOS 5.3\r\n",
-    "short_description": "ParrotOS 5.3\r\n",
-    "name": "${user}/parrotos-5.3",
+    "description": "ParrotOS 6.0\r\n",
+    "short_description": "ParrotOS 6.0\r\n",
+    "name": "${user}/parrotos-6.0",
     "versions": [
         {
-            "version": "5.3",
+            "version": "6.0",
             "status": "active",
-            "description_html": "<h4>ParrotOS 5.3</h4>\n\n",
-            "description_markdown": "#### ParrotOS 5.3\r\n\r\n",
+            "description_html": "<h4>ParrotOS 6.0</h4>\n\n",
+            "description_markdown": "#### ParrotOS 6.0\r\n\r\n",
             "providers": [
                 {
                     "name": "libvirt",
