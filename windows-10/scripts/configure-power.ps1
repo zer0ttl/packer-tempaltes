@@ -22,11 +22,13 @@ powercfg -setactive '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'
 Write-Host 'Turn off Hibernation'
 powercfg.exe /hibernate off
 
-Write-Host 'Turn off monitor timeout on AC power'
-powercfg -Change -monitor-timeout-ac 0
-
-Write-Host 'Turn off monitor timeout on DC power'
-powercfg -Change -monitor-timeout-dc 0
+Write-Host 'Turn off monitor, standby, hibernate timeouts on AC and DC power'
+powercfg /change standby-timeout-ac 0
+powercfg /change standby-timeout-dc 0
+powercfg /change monitor-timeout-ac 0
+powercfg /change monitor-timeout-dc 0
+powercfg /change hibernate-timeout-ac 0
+powercfg /change hibernate-timeout-dc 0
 
 Write-Host 'Zero Hibernation File'
 # %SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateFileSizePercent /t REG_DWORD /d 0 /f
