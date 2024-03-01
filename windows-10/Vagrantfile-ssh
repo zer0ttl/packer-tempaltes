@@ -1,30 +1,35 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Warning: This config is added by default on any vm that is created using the box.
+# This file is currently not added to packer boxing.
+
 Vagrant.configure("2") do |config|
+  #config.vm.define "test-box"
   config.vm.box = "zer0ttl/windows-10-ssh"
   config.vm.guest = :windows
   config.vm.box_check_update = false
-  config.vm.define "detektlabs-winwrk001"
-  config.vm.hostname = "detektlabs-winwrk001"
+  #config.vm.hostname = "test-box"
 
   # network config
-  config.vm.network :private_network,
-    :type => "dhcp",
-    :libvirt__network_name => "detection-lab-nat"
-  config.vm.network :forwarded_port, guest: 22, host: 22, id: "ssh", auto_correct:true
-  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct:true
+  #config.vm.network :private_network,
+  #  :type => "dhcp",
+  #  :libvirt__network_name => "detection-lab-nat"
   
-  # windows specific config
+  # port forwarding
+  #config.vm.network :forwarded_port, guest: 22, host: 22, id: "ssh", auto_correct:true
+  #config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct:true
+  
+  # ssh specific config
   config.vm.boot_timeout      = 3000
   config.vm.communicator      = "winssh"
   config.winssh.shell         = "powershell"
 
-  config.vm.provider :libvirt do |guest|
-    guest.default_prefix = ""
-    guest.cpus = 4
+  config.vm.provider :libvirt do |guest, override|
+    #guest.default_prefix = ""
+    guest.cpus = 2
     guest.memory = 4096
-    guest.mgmt_attach = false
+   #guest.mgmt_attach = false
     guest.graphics_type = "spice"
     guest.graphics_port = -1
     guest.graphics_ip = "0.0.0.0"
@@ -35,5 +40,5 @@ Vagrant.configure("2") do |config|
     guest.random  :model => 'random'
   end
 
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  #config.vm.synced_folder ".", "/vagrant", disabled: true
 end

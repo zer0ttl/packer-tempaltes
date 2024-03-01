@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Warning: This config is added by default on any vm that is created using the box.
+# This file is currently not added to packer boxing.
+
 Vagrant.configure("2") do |config|
   config.vm.box = "zer0ttl/windows-10-ssh"
   config.vm.guest = :windows

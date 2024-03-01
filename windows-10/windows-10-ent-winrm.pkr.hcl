@@ -54,7 +54,7 @@ variable "iso_checksum" {
 
 variable "iso_url" {
   type    = string
-  default = "/mnt/hdd01/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+  default = "/home/sudhir/isos/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 }
 
 variable "memory" {
@@ -206,7 +206,7 @@ build {
     keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile-winrm"
+    # vagrantfile_template = "Vagrantfile-winrm"
   }
 
 }

@@ -213,7 +213,7 @@ build {
     keep_input_artifact  = false
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile-ssh"
+    # vagrantfile_template = "Vagrantfile-ssh"
   }
 
 }
