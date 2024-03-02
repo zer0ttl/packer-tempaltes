@@ -28,7 +28,7 @@ variable "accelerator" {
 
 variable "autounattend" {
   type    = string
-  default = "http/Autounattend.xml"
+  default = "http/ssh/Autounattend.xml"
 }
 
 variable "boot_wait" {
@@ -154,6 +154,7 @@ source "qemu" "windows-10-ent" {
   floppy_files        = [
                            "${var.autounattend}",
                            "${var.unattend}",
+                           "scripts/configureRemotingForAnsible.ps1",
                            "scripts/post-setup.ps1",
                            "scripts/opensshv2.ps1",
                            "scripts/SetupComplete.cmd",
@@ -204,6 +205,7 @@ build {
     elevated_user        = "${var.ssh_username}"
     elevated_password    = "${var.ssh_password}"
     scripts = [
+      "scripts/configureRemotingForAnsible.ps1",
       "scripts/bginfo.ps1",
       "scripts/agents.ps1",
       "scripts/fixes.ps1",

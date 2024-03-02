@@ -58,7 +58,7 @@
                         <CreatePartition wcm:action="add">
                             <Type>Primary</Type>
                             <Order>1</Order>
-                            <Size>100</Size>
+                            <Size>350</Size>
                         </CreatePartition>
                         <CreatePartition wcm:action="add">
                             <Order>2</Order>
@@ -186,15 +186,38 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>3</Order>
+                    <CommandLine>%windir%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
+                    <Description>Disable password expiration for vagrant user</Description>
+                </SynchronousCommand>
+                <!-- <SynchronousCommand wcm:action="add">
+                    <Order>4</Order>
                     <CommandLine>%windir%\System32\WindowsPowerShell\v1.0\powershell.exe -Command Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory "Private"</CommandLine>
                     <Description>Sets detected network connections to private to allow start of winrm</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
+                </SynchronousCommand> -->
+                <!-- <SynchronousCommand wcm:action="add">
                     <Order>4</Order>
-                    <CommandLine>%windir%\System32\WindowsPowerShell\v1.0\powershell.exe -Command Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP" -RemoteAddress Any</CommandLine>
-                    <Description>Allows winrm over public profile interfaces</Description>
+                    <Description>Disable network discovery prompt for all users</Description>
+                    <CommandLine>reg ADD HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff /f</CommandLine>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
+                    <Order>5</Order>
+                    <Description>Turn on network discovery for all network profiles</Description>
+                    <CommandLine>netsh advfirewall firewall set rule group=&quot;Network Discovery&quot; new enable=Yes</CommandLine>
+                </SynchronousCommand> -->
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\windows-init.ps1</CommandLine>
+                    <Order>5</Order>
+                    <Description>Enable winrm</Description>
+                </SynchronousCommand>
+                <!-- <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\configureRemotingForAnsible.ps1</CommandLine>
+                    <Order>6</Order>
+                    <Description>Enable winrm</Description>
+                </SynchronousCommand> -->
+
+
+
+                <!-- <SynchronousCommand wcm:action="add">
                     <Order>5</Order>
                     <CommandLine>%windir%\System32\cmd.exe /c winrm quickconfig -q</CommandLine>
                     <Description>winrm quickconfig -q</Description>
@@ -253,12 +276,8 @@
                     <Order>16</Order>
                     <CommandLine>%windir%\System32\cmd.exe /c net start winrm</CommandLine>
                     <Description>Start Win RM Service</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Order>17</Order>
-                    <CommandLine>%windir%\System32\cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
-                    <Description>Disable password expiration for vagrant user</Description>
-                </SynchronousCommand>
+                </SynchronousCommand> -->
+
             </FirstLogonCommands>
         </component>
         <component name="Microsoft-Windows-WinRE-RecoveryAgent" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">

@@ -145,6 +145,8 @@ source "qemu" "windows-10-winrm" {
   floppy_files        = [
                            "${var.autounattend}",
                            "${var.unattend}",
+                           "scripts/configureRemotingForAnsible.ps1",
+                           "scripts/windows-init.ps1",
                            "scripts/post-setup.ps1",
                            "scripts/SetupComplete.cmd",
                            "scripts/sysprep.bat",
@@ -196,7 +198,8 @@ build {
       "scripts/disable-uac.ps1",
       "scripts/enable-file-sharing.ps1",
       "scripts/enable-remote-desktop.ps1",
-      "scripts/post-setup.ps1"
+      "scripts/post-setup.ps1",
+      "scripts/configureRemotingForAnsible.ps1"
     ]
   }
 
