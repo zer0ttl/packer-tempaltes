@@ -5,13 +5,13 @@ autoinstall:
       layout: us
       variant: ""
       toggle: ""
-  network:
-      network:
-          version: 2
-          ethernets:
-              eth0:
-                 dhcp4: yes
-                 dhcp6: no
+  # network:
+  #     network:
+  #         version: 2
+  #         ethernets:
+  #             eth0:
+  #                dhcp4: true
+  #                dhcp6: false
   apt:
       geoip: false
       primary:
@@ -36,15 +36,17 @@ autoinstall:
     - systemctl stop ssh.service
     - systemctl stop ssh.socket
   ssh:
-    install-server: yes
-    allow-pw: yes
+    install-server: true
+    allow-pw: true
   network:
-    version: 2
-    ethernets:
-      all:
-        match:
-          name: "*"
-        dhcp4: yes
+    network:
+      version: 2
+      ethernets:
+        all:
+          match:
+            name: "*"
+          dhcp4: true
+          dhcp6: false
   user-data:
     users:
       - name: root

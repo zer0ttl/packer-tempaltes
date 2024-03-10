@@ -16,11 +16,11 @@ DEBIAN_FRONTEND="noninteractive" sudo apt-get remove update-notifier unattended-
 
 # disable apt-daily
 echo "*** Disable apt-daily"
-sudo systemctl stop apt-daily.timer;
-sudo systemctl stop apt-daily-upgrade.timer;
-sudo systemctl disable apt-daily.timer;
-sudo systemctl disable apt-daily-upgrade.timer;
-sudo systemctl daemon-reload;
+sudo systemctl stop apt-daily.timer > /dev/null
+sudo systemctl stop apt-daily-upgrade.timer > /dev/null
+sudo systemctl disable apt-daily.timer > /dev/null
+sudo systemctl disable apt-daily-upgrade.timer > /dev/null
+sudo systemctl daemon-reload > /dev/null
 
 # reset the machine-id.
 # NB systemd will re-generate it on the next boot.

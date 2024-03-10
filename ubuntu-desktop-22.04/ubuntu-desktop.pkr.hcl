@@ -62,14 +62,19 @@ variable "ssh_username" {
   default = "root"
 }
 
+variable "ubuntu_version" {
+  type    = string
+  default = "22.04.4"
+}
+
 variable "ubuntu_checksum_url" {
   type    = string
-  default = "https://releases.ubuntu.com/22.04.3/SHA256SUMS"
+  default = "https://releases.ubuntu.com/22.04.4/SHA256SUMS"
 }
 
 variable "ubuntu_iso_url" {
   type    = string
-   default = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
+   default = "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
 }
 
 variable "local_iso_path" {
@@ -133,6 +138,7 @@ build {
       "scripts/desktop.sh",
       "scripts/spice-agent.sh",
       "scripts/qemu-agent.sh",
+      "scripts/network.sh",
       "scripts/updates.sh"
     ]
     expect_disconnect = true
@@ -140,10 +146,10 @@ build {
 
 #  provisioner "breakpoint" {}
 
-  provisioner "shell" {
-    inline            = ["reboot"]
-    expect_disconnect = true
-  }
+#  provisioner "shell" {
+#    inline            = ["reboot"]
+#    expect_disconnect = true
+#  }
 
 #  provisioner "breakpoint" {}
 
@@ -157,6 +163,6 @@ build {
   post-processor "vagrant" {
     compression_level    = 9
     output               = "${var.name}-{{ .Provider }}.box"
-    vagrantfile_template = "Vagrantfile"
+    # vagrantfile_template = "Vagrantfile"
   }
 }

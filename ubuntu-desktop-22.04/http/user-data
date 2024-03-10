@@ -2,7 +2,8 @@
 autoinstall:
   storage:
     layout:
-      name: direct
+      # name: direct
+      name: lvm
   early-commands:
     # otherwise packer tries to connect and exceed max attempts:
     - systemctl stop ssh.service
@@ -24,4 +25,7 @@ autoinstall:
         lock_passwd: false
   late-commands:
     - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /target/etc/ssh/sshd_config
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT=="\1 net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=" net.ifnames/GRUB_CMDLINE_LINUX_DEFAULT="net.ifnames/g' /target/etc/default/grub
+    - curtin in-target --target=/target -- update-grub
   version: 1

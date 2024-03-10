@@ -13,12 +13,11 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-desktop-minimal lightdm
 echo "*** Enabling lightdm.service"
 
 # https://unix.stackexchange.com/questions/561797/how-do-i-re-enable-the-lightdm-service
-sudo systemctl enable lightdm.service > /dev/null
+# sudo systemctl enable lightdm.service > /dev/null
 # /lib/systemd/systemd-sysv-install enable lightdm
 
 echo "*** Starting lightdm.service"
-
-sudo systemctl start lightdm.service > /dev/null
+sudo service lightdm start > /dev/null
 
 sed -i 's/mesg n || true.*/tty -s \&\& mesg n || true/g' /root/.profile
 
