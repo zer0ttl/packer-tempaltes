@@ -39,7 +39,7 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "ubuntu-server-22.04"
+  default = "ubuntu-server-22.04.03"
 }
 
 variable "packer_images_output_dir" {
@@ -153,6 +153,6 @@ build {
   post-processor "vagrant" {
     compression_level    = 9
     output               = "${var.name}-{{ .Provider }}.box"
-    vagrantfile_template = "Vagrantfile"
+  #  vagrantfile_template = "Vagrantfile"
   }
 }

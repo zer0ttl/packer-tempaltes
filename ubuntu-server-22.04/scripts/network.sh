@@ -25,10 +25,9 @@ truncate -s 0 /etc/netplan/00-installer-config.yaml > /dev/null
 cat <<-EOF > /etc/netplan/00-installer-config.yaml
 network:
   ethernets:
-    all:
+    eth0:
       dhcp4: true
-      match:
-        name: 'eth*'
+      dhcp6: false
   version: 2
 EOF
 
