@@ -39,7 +39,7 @@ variable "memory" {
 
 variable "name" {
   type    = string
-  default = "ubuntu-server-22.04.03"
+  default = "ubuntu-server-22.04.4"
 }
 
 variable "packer_images_output_dir" {
@@ -64,12 +64,12 @@ variable "ssh_username" {
 
 variable "ubuntu_checksum_url" {
   type    = string
-  default = "https://releases.ubuntu.com/22.04.3/SHA256SUMS"
+  default = "https://releases.ubuntu.com/22.04.4/SHA256SUMS"
 }
 
 variable "ubuntu_iso_url" {
   type    = string
-   default = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
+   default = "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
 }
 
 variable "local_iso_path" {
