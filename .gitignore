@@ -19,7 +19,7 @@ provision.yml
 */*/metadata*.json
 
 # builds directory
-builds/*/*/*/output
-builds/*/*/*/output/*
+builds/*/*/*/output*
+builds/*/*/*/output*/*
 builds/*/*/*/*.box
 builds/*/*/*/metadata*.json
