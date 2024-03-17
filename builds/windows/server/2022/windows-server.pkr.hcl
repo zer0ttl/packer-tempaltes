@@ -27,6 +27,41 @@ locals {
   vm_name_standard_core      = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}-${var.vm_guest_os_edition_standard}-${var.vm_guest_os_experience_core}"
   vm_name_standard_desktop   = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}-${var.vm_guest_os_edition_standard}-${var.vm_guest_os_experience_desktop}"
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
+  vm_cd_files_core           = [
+                                "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/qemu-agent.ps1",
+                                "${local.scripts_path}/power.ps1",
+                                "${local.scripts_path}/common-fixes.ps1",
+                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/SetupComplete.cmd",
+                                "${local.scripts_path}/sysprep.bat"
+                              ]
+  vm_cd_files_desktop        = [
+                                "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/qemu-agent.ps1",
+                                "${local.scripts_path}/spice-tools.ps1",
+                                "${local.scripts_path}/bginfo.ps1",
+                                "${local.scripts_path}/bginfo.bgi",
+                                "${local.scripts_path}/power.ps1",
+                                "${local.scripts_path}/common-fixes.ps1",
+                                "${local.scripts_path}/post-setup.ps1",
+                                "${local.scripts_path}/SetupComplete.cmd",
+                                "${local.scripts_path}/sysprep.bat"
+                              ]
+  vm_provision_files_core    = [
+                                "${local.scripts_path}/qemu-agent.ps1",
+                                "${local.scripts_path}/power.ps1",
+                                "${local.scripts_path}/common-fixes.ps1",
+                                "${local.scripts_path}/post-setup.ps1"
+                                ]
+  vm_provision_files_desktop = [
+                                "${local.scripts_path}/qemu-agent.ps1",
+                                "${local.scripts_path}/spice-tools.ps1",
+                                "${local.scripts_path}/bginfo.ps1",
+                                "${local.scripts_path}/power.ps1",
+                                "${local.scripts_path}/common-fixes.ps1",
+                                "${local.scripts_path}/post-setup.ps1"
+                                ]
 }
 
 source "qemu" "windows-server-standard-core" {
@@ -36,13 +71,7 @@ source "qemu" "windows-server-standard-core" {
   cpus                  = var.vm_cpu_count
   disk_interface        = var.vm_disk_interface
   disk_size             = var.vm_disk_size
-  cd_files              = [
-                            "${local.scripts_path}/setup-openssh.ps1",
-                            "${local.scripts_path}/qemu-agent.ps1",
-                            "${local.scripts_path}/post-setup.ps1",
-                            "${local.scripts_path}/SetupComplete.cmd",
-                            "${local.scripts_path}/sysprep.bat"
-                        ]
+  cd_files              = local.vm_cd_files_core
   cd_content            = {
                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
@@ -87,14 +116,7 @@ source "qemu" "windows-server-standard-desktop" {
   cpus                  = var.vm_cpu_count
   disk_interface        = var.vm_disk_interface
   disk_size             = var.vm_disk_size
-  cd_files              = [
-                            "${local.scripts_path}/setup-openssh.ps1",
-                            "${local.scripts_path}/qemu-agent.ps1",
-                            "${local.scripts_path}/spice-tools.ps1",
-                            "${local.scripts_path}/post-setup.ps1",
-                            "${local.scripts_path}/SetupComplete.cmd",
-                            "${local.scripts_path}/sysprep.bat"
-                        ]
+  cd_files              = local.vm_cd_files_desktop
   cd_content            = {
                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
@@ -139,13 +161,7 @@ source "qemu" "windows-server-datacenter-core" {
   cpus                  = var.vm_cpu_count
   disk_interface        = var.vm_disk_interface
   disk_size             = var.vm_disk_size
-  cd_files              = [
-                            "${local.scripts_path}/setup-openssh.ps1",
-                            "${local.scripts_path}/qemu-agent.ps1",
-                            "${local.scripts_path}/post-setup.ps1",
-                            "${local.scripts_path}/SetupComplete.cmd",
-                            "${local.scripts_path}/sysprep.bat"
-                        ]
+  cd_files              = local.vm_cd_files_core
   cd_content            = {
                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
@@ -190,14 +206,7 @@ source "qemu" "windows-server-datacenter-desktop" {
   cpus                  = var.vm_cpu_count
   disk_interface        = var.vm_disk_interface
   disk_size             = var.vm_disk_size
-  cd_files              = [
-                            "${local.scripts_path}/setup-openssh.ps1",
-                            "${local.scripts_path}/qemu-agent.ps1",
-                            "${local.scripts_path}/spice-tools.ps1",
-                            "${local.scripts_path}/post-setup.ps1",
-                            "${local.scripts_path}/SetupComplete.cmd",
-                            "${local.scripts_path}/sysprep.bat"
-                        ]
+  cd_files              = local.vm_cd_files_desktop
   cd_content            = {
                             "Autounattend.xml" = templatefile("${abspath(path.root)}/data/autounattend.pkrtpl.hcl", {
                                 build_username       = var.build_username
@@ -247,17 +256,14 @@ build {
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.build_username}"
-    elevated_password    = "${var.build_password}"
-    scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/post-setup.ps1"
-    ]
+    elevated_user        = var.build_username
+    elevated_password    = var.build_password
+    scripts              = local.vm_provision_files_core
   }
 
   post-processor "vagrant" {
-      compression_level    = 9
-      output               = "packer_${local.vm_name_standard_core}_{{.Provider}}_{{.Architecture}}.box"
+      compression_level  = 9
+      output             = "packer_${local.vm_name_standard_core}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
 
@@ -270,18 +276,14 @@ build {
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.build_username}"
-    elevated_password    = "${var.build_password}"
-    scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/spice-tools.ps1",
-      "${local.scripts_path}/post-setup.ps1"
-    ]
+    elevated_user        = var.build_username
+    elevated_password    = var.build_password
+    scripts              = local.vm_provision_files_desktop
   }
 
   post-processor "vagrant" {
-      compression_level    = 9
-      output               = "packer_${local.vm_name_standard_desktop}_{{.Provider}}_{{.Architecture}}.box"
+      compression_level  = 9
+      output             = "packer_${local.vm_name_standard_desktop}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
 
@@ -293,17 +295,14 @@ build {
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.build_username}"
-    elevated_password    = "${var.build_password}"
-    scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/post-setup.ps1"
-    ]
+    elevated_user        = var.build_username
+    elevated_password    = var.build_password
+    scripts              = local.vm_provision_files_core
   }
 
   post-processor "vagrant" {
-      compression_level    = 9
-      output               = "packer_${local.vm_name_datacenter_core}_{{.Provider}}_{{.Architecture}}.box"
+      compression_level  = 9
+      output             = "packer_${local.vm_name_datacenter_core}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
 
@@ -316,17 +315,13 @@ build {
   ]
 
   provisioner "powershell" {
-    elevated_user        = "${var.build_username}"
-    elevated_password    = "${var.build_password}"
-    scripts = [
-      "${local.scripts_path}/qemu-agent.ps1",
-      "${local.scripts_path}/spice-tools.ps1",
-      "${local.scripts_path}/post-setup.ps1"
-    ]
+    elevated_user        = var.build_username
+    elevated_password    = var.build_password
+    scripts              = local.vm_provision_files_desktop
   }
 
   post-processor "vagrant" {
-      compression_level    = 9
-      output               = "packer_${local.vm_name_datacenter_desktop}_{{.Provider}}_{{.Architecture}}.box"
+      compression_level  = 9
+      output             = "packer_${local.vm_name_datacenter_desktop}_{{.Provider}}_{{.Architecture}}.box"
   }
 }
