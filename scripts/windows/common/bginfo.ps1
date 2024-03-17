@@ -20,7 +20,7 @@ Write-Host "Downloading Bginfo"
 Invoke-WebRequest -Uri "https://live.sysinternals.com/Bginfo.exe" -OutFile "C:\Windows\Bginfo.exe"
 
 Write-Host "Configuring Bginfo"
-Copy-Item -Path "F:\bginfo.bgi" -Destination "C:\Windows\bginfo.bgi"
+Copy-Item -Path "E:\bginfo.bgi" -Destination "C:\Windows\bginfo.bgi"
 
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name BgInfo -Value "C:\Windows\Bginfo.exe C:\Windows\bginfo.bgi /silent /Timer:0 /nolicprompt" -Force
 
