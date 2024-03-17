@@ -1,6 +1,6 @@
 // Virtual Machine Hardware Settings
 vm_accelerator = "kvm"
-vm_boot_wait = "5s"
+vm_boot_wait = "30s"
 vm_cpu_count = 4
 vm_disk_interface = "virtio"
 vm_disk_size = 128000
