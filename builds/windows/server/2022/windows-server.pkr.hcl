@@ -100,7 +100,6 @@ source "qemu" "windows-server-standard-core" {
                             ["-cdrom", "${var.iso_virtio_windows}"]
                          ]
   memory               = var.vm_mem_size
-  output_directory     = var.vm_output_directory
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
@@ -145,7 +144,6 @@ source "qemu" "windows-server-standard-desktop" {
                             ["-cdrom", "${var.iso_virtio_windows}"]
                          ]
   memory               = var.vm_mem_size
-  output_directory     = var.vm_output_directory
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
@@ -190,7 +188,6 @@ source "qemu" "windows-server-datacenter-core" {
                             ["-cdrom", "${var.iso_virtio_windows}"]
                          ]
   memory               = var.vm_mem_size
-  output_directory     = var.vm_output_directory
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
@@ -235,7 +232,6 @@ source "qemu" "windows-server-datacenter-desktop" {
                             ["-cdrom", "${var.iso_virtio_windows}"]
                          ]
   memory               = var.vm_mem_size
-  output_directory     = var.vm_output_directory
   shutdown_command     = var.vm_shutdown_command
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
