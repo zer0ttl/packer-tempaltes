@@ -73,8 +73,9 @@ variable "packer_images_output_dir" {
 }
 
 variable "ssh_private_key_file" {
-  type    = string
-  default = "vagrant-key"
+  type        = string
+  description = "Path to a PEM encoded private key file to use to authenticate with SSH."
+  default     = "vagrant-key"
 }
 
 variable "shutdown_wait_timeout" {
@@ -200,6 +201,6 @@ build {
   post-processor "vagrant" {
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile"
+    # vagrantfile_template = "Vagrantfile"
   }
 }

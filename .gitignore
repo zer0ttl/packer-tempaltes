@@ -17,3 +17,9 @@ provision.yml
 */metadata*.json
 */*/metadata.json
 */*/metadata*.json
+
+# builds directory
+builds/*/*/*/output
+builds/*/*/*/output/*
+builds/*/*/*/*.box
+builds/*/*/*/metadata*.json

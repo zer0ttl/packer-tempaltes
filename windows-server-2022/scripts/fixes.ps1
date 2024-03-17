@@ -61,4 +61,8 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Wi
 # New-Item -Path "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" -Force
 reg.exe add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
+# Reset the autologon count.
+# Reference: https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -Value 0
+
 Write-Host "Finished fixes.."

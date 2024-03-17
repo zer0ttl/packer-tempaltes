@@ -205,6 +205,6 @@ build {
   post-processor "vagrant" {
     compression_level    = 9
     output               = "${var.name}-{{.Provider}}.box"
-    vagrantfile_template = "Vagrantfile"
+    # vagrantfile_template = "Vagrantfile"
   }
 }

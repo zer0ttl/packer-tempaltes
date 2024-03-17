@@ -32,9 +32,6 @@ if (Test-Path -Path "e:\virtio-win-guest-tools.exe") {
 }
 # Start-Process -FilePath "e:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
 
-Write-Host "Starting service spice-agent"
-Start-Service -Name "spice-agent"
-
 Write-Host "Starting service QEMU-GA"
 Start-Service -Name "QEMU-GA"
 
@@ -50,5 +47,8 @@ Start-Process -FilePath "$env:temp\spice-guest-tools-latest.exe" -ArgumentList "
 #Write-Verbose "SPICE TOOLS" "Removing Red Hat Certificate..."
 Get-childitem "Cert:\LocalMachine\TrustedPublisher" -ErrorAction SilentlyContinue | Where-Object -Property Thumbprint -eq $cert.Thumbprint -ErrorAction SilentlyContinue | Remove-Item -ErrorAction SilentlyContinue
 #Write-Verbose "SPICE TOOLS" "Successfully Installed."
+
+Write-Host "Starting service spice-agent"
+Start-Service -Name "vdservice"
 
 Write-Host "Installation of virtio and spice agents complete"

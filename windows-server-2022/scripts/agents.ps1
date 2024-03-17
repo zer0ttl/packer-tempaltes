@@ -3,7 +3,7 @@
 
 Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'SilentlyContinue'
 
 trap {
     Write-Host
@@ -26,29 +26,30 @@ $Arguments = @(
     "/norestart"
 )
 if (Test-Path -Path "e:\virtio-win-guest-tools.exe") {
-    Start-Process -FilePath "e:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments -ErrorAction SilentlyContinue
+    Start-Process -FilePath "e:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
 } else {
-    Start-Process -FilePath "d:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments -ErrorAction SilentlyContinue
+    Start-Process -FilePath "d:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
 }
 # Start-Process -FilePath "e:\virtio-win-guest-tools.exe" -Wait -ArgumentList $Arguments
-
-Write-Host "Starting service spice-agent"
-Start-Service -Name "spice-agent"
 
 Write-Host "Starting service QEMU-GA"
 Start-Service -Name "QEMU-GA"
 
-# Spice Tools
-# https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
-Write-Host "Installing Spice Tools"
-$SpiceAgentURL = "https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe"
-Invoke-WebRequest -Uri $SpiceAgentURL -OutFile "$env:temp\spice-guest-tools-latest.exe"
-#Write-Verbose "SPICE TOOLS" "Installing..."
-#Write-Verbose "SPICE TOOLS" "Importing Red Hat Certificate..."
-$cert = Import-Certificate "a:\redhat.cer" -CertStoreLocation "Cert:\LocalMachine\TrustedPublisher" -ErrorAction SilentlyContinue
-Start-Process -FilePath "$env:temp\spice-guest-tools-latest.exe" -ArgumentList "/S" -Wait -ErrorAction SilentlyContinue
-#Write-Verbose "SPICE TOOLS" "Removing Red Hat Certificate..."
-Get-childitem "Cert:\LocalMachine\TrustedPublisher" -ErrorAction SilentlyContinue | Where-Object -Property Thumbprint -eq $cert.Thumbprint -ErrorAction SilentlyContinue | Remove-Item -ErrorAction SilentlyContinue
-#Write-Verbose "SPICE TOOLS" "Successfully Installed."
+# # Spice Tools
+# # https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
+# Write-Host "Installing Spice Tools"
+# $SpiceAgentURL = "https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe"
+# Invoke-WebRequest -Uri $SpiceAgentURL -OutFile "$env:temp\spice-guest-tools-latest.exe"
+# #Write-Verbose "SPICE TOOLS" "Installing..."
+# #Write-Verbose "SPICE TOOLS" "Importing Red Hat Certificate..."
+# $cert = Import-Certificate "a:\redhat.cer" -CertStoreLocation "Cert:\LocalMachine\TrustedPublisher" -ErrorAction SilentlyContinue
+# certutil.exe -addstore TrustedPublisher "a:\redhat.cer"
+# Start-Process -FilePath "$env:temp\spice-guest-tools-latest.exe" -ArgumentList "/S" -Wait
+# #Write-Verbose "SPICE TOOLS" "Removing Red Hat Certificate..."
+# Get-childitem "Cert:\LocalMachine\TrustedPublisher" | Where-Object -Property Thumbprint -eq $cert.Thumbprint | Remove-Item
+# #Write-Verbose "SPICE TOOLS" "Successfully Installed."
+
+# Write-Host "Starting service spice-agent"
+# Start-Service -Name "vdservice"
 
 Write-Host "Installation of virtio and spice agents complete"
