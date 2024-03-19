@@ -1,0 +1,28 @@
+---
+# Linux
+
+- name: Prep and install guest agents
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Qemu Guest agent
+      ansible.builtin.apt:
+        name: qemu-guest-agent
+        state: present
+
+    - name: Install Spice vdagent
+      ansible.builtin.apt:
+        name: spice-vdagent
+        state: present
+      register: spice_agent_result
+
+    - name: Start Spice agent service
+      ansible.builtin.systemd_service:
+        name: spice-vdagent
+        state: started
+        enabled: true
+      when: spice_agent_result is succeeded

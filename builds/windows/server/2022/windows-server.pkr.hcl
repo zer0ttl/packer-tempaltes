@@ -236,12 +236,8 @@ source "qemu" "windows-server-datacenter-desktop" {
   shutdown_timeout     = var.common_shutdown_timeout
   ssh_username         = var.build_username
   ssh_private_key_file = var.communicator_key_file
-  ssh_wait_timeout     = var.communicator_timeout
+  ssh_timeout          = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
-}
-
-source "null" "first-example" {
-  communicator = "none"
 }
 
 build {
