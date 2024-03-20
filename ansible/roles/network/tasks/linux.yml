@@ -1,0 +1,98 @@
+---
+# Linux
+
+- name: Network configuration
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Disable IPv6 for the current boot
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.disable_ipv6
+        value: '1'
+        sysctl_set: true
+
+    - name: Ensure IPv6 stays disabled
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.disable_ipv6
+        value: '1'
+        state: present
+        sysctl_set: true
+
+    - name: Delete old netplan config
+      ansible.builtin.file:
+        path: /etc/netplan/00-installer-config.yaml
+        state: absent
+
+    - name: Create a new netplan config for eth0
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/01-netcfg.yaml"
+        dest: /etc/netplan/01-netcfg.yaml
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Generate the new netplan configuration
+      ansible.builtin.command:
+        cmd: netplan generate
+      register: netplan_generate
+      changed_when: netplan_generate.rc != 0
+
+    - name: Apply the new netplan configuration
+      ansible.builtin.command:
+        cmd: netplan apply
+      register: netplan_apply
+      changed_when: netplan_apply.rc != 0
+
+- name: DNS configuration
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Set DNS servers
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#DNS='
+        line: 'DNS=1.1.1.1 1.0.0.1'
+
+    - name: Enable Domains
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#Domains='
+        line: 'Domains='
+
+    - name: Enable DNSSEC
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#DNSSEC='
+        line: 'DNSSEC=yes'
+
+    - name: Enable DNS caching
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#Cache='
+        line: 'Cache=yes'
+
+    - name: Enable DNS Stub Listener
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#DNSStubListener='
+        line: 'DNSStubListener=yes'
+
+- name: Network configuration on boot
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Ensure the networking interfaces get configured on boot
+      ansible.builtin.systemd_service:
+        name: systemd-networkd.service
+        state: reloaded
+        enabled: true
+
+# Ref: https://wiki.archlinux.org/title/systemd-resolved
+# Ref: https://www.freedesktop.org/software/systemd/man/latest/resolved.conf.html
+# Ref: https://github.com/chef/bento/blob/main/packer_templates/scripts/ubuntu/networking_ubuntu.sh
+# Ref: https://github.com/lavabit/robox/blob/master/scripts/ubuntu2204/network.sh

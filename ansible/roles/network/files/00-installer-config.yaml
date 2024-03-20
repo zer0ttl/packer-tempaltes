@@ -1,0 +1,6 @@
+network:
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp6: false
+  version: 2

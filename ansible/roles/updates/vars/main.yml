@@ -1,2 +1,2 @@
 ---
-task_name: "Upgrade Ubuntu/Debian servers and reboot if needed"
+updates_task_name: "Upgrade Ubuntu/Debian servers and reboot if needed"

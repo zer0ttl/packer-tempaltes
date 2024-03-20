@@ -1,0 +1,124 @@
+---
+# Linux
+
+# Ref: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=751636
+- name: Fix libpam-systemd
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install libpam-systemd
+      ansible.builtin.apt:
+        name: libpam-systemd
+        state: present
+
+- name: Disable root login using password
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Lock the password for root user
+      ansible.builtin.user:
+        name: root
+        password_lock: true
+
+    - name: Disable passwordl login via ssh
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+
+- name: Disable upgrade popup and unattended upgrades
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Disable upgrade popup
+      ansible.builtin.lineinfile:
+        path: /etc/update-manager/release-upgrades
+        state: present
+        regexp: '^Prompt='
+        line: 'Prompt=never'
+
+    - name: Disable unattended upgrades
+      ansible.builtin.apt:
+        name:
+          - update-notifier
+          - unattended-upgrades
+        state: absent
+        purge: true
+
+- name: Disable apt-daily
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Stop and disable apt-daily.timer
+      ansible.builtin.systemd_service:
+        name: apt-daily.timer
+        state: stopped
+        enabled: false
+
+    - name: Stop and disable apt-daily-upgrade.timer
+      ansible.builtin.systemd_service:
+        name: apt-daily-upgrade.timer
+        state: stopped
+        enabled: false
+
+    - name: Force systemd to reread configs
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+
+# NB systemd will re-generate the machine-id on the next boot.
+# NB machine-id is indirectly used in DHCP as Option 61 (Client Identifier), which
+#    the DHCP server uses to (re-)assign the same or new client IP address.
+# Ref: https://www.freedesktop.org/software/systemd/man/machine-id.html
+# Ref: https://www.freedesktop.org/software/systemd/man/systemd-machine-id-setup.html
+- name: Reset the machine id
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Delete /etc/machine-id
+      ansible.builtin.file:
+        path: /etc/machine-id
+        state: absent
+
+    - name: Delete /var/lib/dbus/machine-id
+      ansible.builtin.file:
+        path: /var/lib/dbus/machine-id
+        state: absent
+
+- name: Reset the random seed
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Stop systemd-random-seed.service
+      ansible.builtin.systemd_service:
+        name: apt-daily-upgrade.timer
+        state: stopped
+
+    - name: Delete /var/lib/systemd/random-seed
+      ansible.builtin.file:
+        path: /var/lib/systemd/random-seed
+        state: absent
+
+- name: Cleanup
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Remove useless packages from the cache
+      ansible.builtin.apt:
+        autoclean: true
+
+    - name: Remove dependencies that are no longer required and purge their configuration files
+      ansible.builtin.apt:
+        autoremove: true
+        purge: true
+
+    - name: Clean logs directory
+      ansible.builtin.file:
+        path: /var/log
+        state: absent
+        recurse: true

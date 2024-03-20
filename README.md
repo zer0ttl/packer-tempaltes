@@ -8,7 +8,7 @@
 - #todo
   make ansible roles for spice-agent.sh | DONE
   make ansible roles for qemu-agent.sh | DONE
-  make ansible roles for network.sh
+  make ansible roles for network.sh | DONE
   make ansible roles for updates.sh | DONE
   make ansible roles for fixes.sh
   make ansible roles for desktop.sh
@@ -50,7 +50,7 @@ packer build -force -on-error=ask --only windows-server-datacenter-desktop.* -va
 
 # do not use -var-file=variable.pkr.hcl
 # that is the variable declaration file
-# that file is automatically included by packer
+# that file is automatically included by packer when doing `packer build`
 
 
 # RESUME HERE
