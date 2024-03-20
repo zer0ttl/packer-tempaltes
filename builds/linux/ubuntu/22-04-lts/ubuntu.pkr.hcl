@@ -32,12 +32,14 @@ locals {
             vm_guest_os_language     = var.vm_guest_os_language
             vm_guest_os_keyboard     = var.vm_guest_os_keyboard
             vm_guest_os_timezone     = var.vm_guest_os_timezone
+            vm_guest_os_family       = var.vm_guest_os_family
+            vm_guest_os_edition      = var.vm_guest_os_edition
             network                  = file("${abspath(path.root)}/data/network.pkrtpl.hcl")
             storage                  = file("${abspath(path.root)}/data/storage.pkrtpl.hcl")
             additional_packages      = var.additional_packages
         })
     }
-    vm_name      = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_version}"
+    vm_name      = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_edition}-${var.vm_guest_os_version}"
     project_root = "${abspath(path.root)}../../../.."
     ansible_path = "${abspath(path.root)}/../../../../ansible"
     scripts_path = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"

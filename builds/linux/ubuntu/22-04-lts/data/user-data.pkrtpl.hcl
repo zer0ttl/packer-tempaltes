@@ -45,8 +45,9 @@ ${network}
     timezone: ${vm_guest_os_timezone}
   late-commands:
     # Disable Predictable Network Interface names and use eth0
-    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT=="\1 net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub
+    - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT=="\1 net.ifnames=0 biosdevname=0"/g' /target/etc/default/grub
     - sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=" net.ifnames/GRUB_CMDLINE_LINUX_DEFAULT="net.ifnames/g' /target/etc/default/grub
     - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
     - echo '${build_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${build_username}
     - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${build_username}
+    - curtin in-target --target=/target -- update-grub

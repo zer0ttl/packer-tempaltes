@@ -42,6 +42,8 @@ build_authorized_keys = [
 vm_guest_os_language = "en_US.UTF-8"
 vm_guest_os_keyboard = "us"
 vm_guest_os_timezone = "UTC"
+
 vm_guest_os_family             = "linux"
 vm_guest_os_name               = "ubuntu"
-vm_guest_os_version            = "22.04.lts"
+vm_guest_os_edition            = "server"
+vm_guest_os_version            = "22.04.4"

@@ -72,6 +72,11 @@ variable "vm_guest_os_family" {
   description = "The guest operating system family. Used for naming."
 }
 
+variable "vm_guest_os_edition" {
+  type        = string
+  description = "The guest operating system edition. Used for naming."
+}
+
 variable "vm_guest_os_name" {
   type        = string
   description = "The guest operating system name. Used for naming."
