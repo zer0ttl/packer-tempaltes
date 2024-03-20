@@ -121,4 +121,3 @@
       ansible.builtin.file:
         path: /var/log
         state: absent
-        recurse: true
