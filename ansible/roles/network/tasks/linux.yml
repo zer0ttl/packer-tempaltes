@@ -37,11 +37,11 @@
       register: netplan_generate
       changed_when: netplan_generate.rc != 0
 
-    - name: Apply the new netplan configuration
-      ansible.builtin.command:
-        cmd: netplan apply
-      register: netplan_apply
-      changed_when: netplan_apply.rc != 0
+    # - name: Apply the new netplan configuration
+    #   ansible.builtin.command:
+    #     cmd: netplan apply
+    #   register: netplan_apply
+    #   changed_when: netplan_apply.rc != 0
 
 - name: DNS configuration
   when: ansible_os_family == 'Debian'
@@ -60,6 +60,13 @@
         state: present
         regexp: '^#Domains='
         line: 'Domains='
+
+    - name: Enable FallbackDNS
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        state: present
+        regexp: '^#FallbackDNS='
+        line: 'FallbackDNS='
 
     - name: Enable DNSSEC
       ansible.builtin.lineinfile:
@@ -81,6 +88,12 @@
         state: present
         regexp: '^#DNSStubListener='
         line: 'DNSStubListener=yes'
+
+    - name: Restart Resolved sevice
+      ansible.builtin.systemd_service:
+        name: systemd-resolved.service
+        state: restarted
+        enabled: true
 
 - name: Network configuration on boot
   when: ansible_os_family == 'Debian'

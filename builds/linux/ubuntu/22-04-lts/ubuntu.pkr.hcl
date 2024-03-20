@@ -88,12 +88,8 @@ build {
         "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
         ]
         extra_arguments = [
-        "--extra-vars", "use_proxy=false",
         "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
-        "--extra-vars", "ansible_connection=ssh",
-        "--extra-vars", "ansible_shell_type=cmd",
-        "--extra-vars", "ansible_user='${var.build_username}'",
-        "-vvvv",
+        "--extra-vars", "ansible_user='${var.build_username}'"
         ]
     }
 
