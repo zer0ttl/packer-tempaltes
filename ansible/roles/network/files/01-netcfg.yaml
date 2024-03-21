@@ -2,10 +2,6 @@ network:
   version: 2
   renderer: networkd
   ethernets:
-    all:
-      match:
-        name: "eth*"
-      optional: true
     eth0:
       dhcp4: true
       nameservers:
