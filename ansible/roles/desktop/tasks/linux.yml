@@ -1,0 +1,33 @@
+---
+# Linux
+
+- name: Install and configure display manager
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Set default display manager for gdm3
+      ansible.builtin.debconf:
+        name: gdm3
+        question: shared/default-x-display-manager
+        value: lightdm
+        vtype: select
+
+    - name: Set default display manager for lightdm
+      ansible.builtin.debconf:
+        name: lightdm
+        question: shared/default-x-display-manager
+        value: lightdm
+        vtype: select
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        pkg:
+          - ubuntu-desktop-minimal
+          - lightdm
+        state: present
+
+    - name: Start lightdm service
+      ansible.builtin.systemd_service:
+        name: lightdm.service
+        state: started
+        enabled: true

@@ -76,7 +76,7 @@ source "qemu" "linux-ubuntu" {
 }
 
 build {
-    name = "linux-ubuntu"
+    name = "ubuntu-server"
 
     sources = [
         "source.qemu.linux-ubuntu"
@@ -92,6 +92,33 @@ build {
         extra_arguments = [
         "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
         "--extra-vars", "ansible_user='${var.build_username}'"
+        ]
+    }
+
+    post-processor "vagrant" {
+        compression_level  = 9
+        output             = "packer_${local.vm_name}_{{.Provider}}_{{.Architecture}}.box"
+    }
+}
+
+build {
+    name = "ubuntu-desktop"
+
+    sources = [
+        "source.qemu.linux-ubuntu"
+    ]
+
+    provisioner "ansible" {
+        user = var.build_username
+        playbook_file = "${local.ansible_path}/linux-playbook.yml"
+        roles_path = "${local.ansible_path}/roles"
+        ansible_env_vars = [
+        "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
+        ]
+        extra_arguments = [
+        "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
+        "--extra-vars", "ansible_user='${var.build_username}'",
+        "--extra-vars", "desktop_env=true",
         ]
     }
 
