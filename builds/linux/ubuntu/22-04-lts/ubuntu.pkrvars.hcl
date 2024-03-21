@@ -45,5 +45,6 @@ vm_guest_os_timezone = "UTC"
 
 vm_guest_os_family             = "linux"
 vm_guest_os_name               = "ubuntu"
-vm_guest_os_edition            = "server"
+vm_guest_server_edition            = "server"
+vm_guest_desktop_edition       = "desktop"
 vm_guest_os_version            = "22.04.4"

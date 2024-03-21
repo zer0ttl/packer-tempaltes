@@ -33,13 +33,13 @@ locals {
             vm_guest_os_keyboard     = var.vm_guest_os_keyboard
             vm_guest_os_timezone     = var.vm_guest_os_timezone
             vm_guest_os_family       = var.vm_guest_os_family
-            vm_guest_os_edition      = var.vm_guest_os_edition
             network                  = file("${abspath(path.root)}/data/network.pkrtpl.hcl")
             storage                  = file("${abspath(path.root)}/data/storage.pkrtpl.hcl")
             additional_packages      = var.additional_packages
         })
     }
-    vm_name      = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_os_edition}-${var.vm_guest_os_version}"
+    vm_server      = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_server_edition}-${var.vm_guest_os_version}"
+    vm_desktop     = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_desktop_edition}-${var.vm_guest_os_version}"
     project_root = "${abspath(path.root)}../../../.."
     ansible_path = "${abspath(path.root)}/../../../../ansible"
     scripts_path = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
@@ -97,7 +97,7 @@ build {
 
     post-processor "vagrant" {
         compression_level  = 9
-        output             = "packer_${local.vm_name}_{{.Provider}}_{{.Architecture}}.box"
+        output             = "packer_${local.vm_server}_{{.Provider}}_{{.Architecture}}.box"
     }
 }
 
@@ -124,6 +124,6 @@ build {
 
     post-processor "vagrant" {
         compression_level  = 9
-        output             = "packer_${local.vm_name}_{{.Provider}}_{{.Architecture}}.box"
+        output             = "packer_${local.vm_desktop}_{{.Provider}}_{{.Architecture}}.box"
     }
 }
