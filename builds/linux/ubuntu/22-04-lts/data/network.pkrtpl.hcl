@@ -2,8 +2,11 @@
     network:
       version: 2
       ethernets:
-        all:
+        all-en:
           match:
-            name: "*"
+            name: "en*"
           dhcp4: true
-          dhcp6: false
+        all-eth:
+          match:
+            name: "eth*"
+          dhcp4: true

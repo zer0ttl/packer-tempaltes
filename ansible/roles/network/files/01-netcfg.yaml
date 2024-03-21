@@ -2,8 +2,13 @@ network:
   version: 2
   renderer: networkd
   ethernets:
+    all:
+      match:
+        name: "eth*"
+      optional: true
     eth0:
       dhcp4: true
-      dhcp6: false
       nameservers:
-        addresses: [1.1.1.1, 1.0.0.1]
+        addresses:
+          - 1.1.1.1
+          - 1.0.0.1

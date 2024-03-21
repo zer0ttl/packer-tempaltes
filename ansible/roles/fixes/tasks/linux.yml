@@ -85,6 +85,11 @@
         path: /etc/machine-id
         state: absent
 
+    - name: Create empty /etc/machine-id
+      ansible.builtin.file:
+        path: /etc/machine-id
+        state: touch
+
     - name: Delete /var/lib/dbus/machine-id
       ansible.builtin.file:
         path: /var/lib/dbus/machine-id
