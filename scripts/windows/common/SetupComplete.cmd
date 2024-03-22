@@ -1,8 +1,6 @@
 :: Winrm: Windows Remote Management (HTTP-In)
-:: netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes
-:: netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new action=allow
-:: Set Connection Profile to Private for WinRM
-:: %windir%\System32\WindowsPowerShell\v1.0\powershell.exe -Command Set-NetConnectionProfile -Name "Network" -NetworkCategory "Private"
+netsh advfirewall firewall set rule group="Windows Remote Management" new enable=yes
+netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=allow
 
 :: OpenSSH: OpenSSH SSH Server (sshd)
 netsh advfirewall firewall set rule name="OpenSSH SSH Server (sshd)" new action=allow
