@@ -1,3 +1,19 @@
+## Update Fri Mar 22 09:34:52 PM UTC 2024
+
+Disregard below.
+
+Now all windows templates run `E:\setup-winrm.ps1` and `E:\setup-openssh.ps1` during unattended setup.
+
+All windows tempaltes use winrm as the communicator.
+
+The `sysprep.bat` then sets the following firewall rules in *block* mode.
+- Windows Remote Management (HTTP-In)
+- OpenSSH SSH Server (sshd)
+The `SetupComplete.cmd` then sets the same rules to *allow* mode once the box has booted.
+
+That's all folks!
+
+
 ## Update: Fri Mar 22 01:43:04 PM UTC 2024
 
 - Static IP address gets set via WinRM build.
