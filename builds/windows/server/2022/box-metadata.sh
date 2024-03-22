@@ -25,7 +25,7 @@ cat > ${metadata_file} <<END
     "name": "${user}/${name}",
     "versions": [
         {
-            "version": "20348.2227",
+            "version": "20348.587",
             "status": "active",
             "description_html": "<h4>${os_family^} ${os_name^} ${os_version} ${os_edition^} ${os_experience^}</h4>\n\n",
             "description_markdown": "#### ${os_family^} ${os_name^} ${os_version} ${os_edition^} ${os_experience^}\r\n\r\n",

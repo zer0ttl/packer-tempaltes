@@ -1,5 +1,5 @@
 :: Winrm: Windows Remote Management (HTTP-In)
-netsh advfirewall firewall set rule group="Windows Remote Management" new enable=yes
+:: netsh advfirewall firewall set rule group="Windows Remote Management" new enable=yes
 netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=allow
 
 :: OpenSSH: OpenSSH SSH Server (sshd)

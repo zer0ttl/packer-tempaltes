@@ -29,6 +29,7 @@ locals {
   scripts_path               = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
   vm_cd_files_core           = [
                                 "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-winrm.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
                                 "${local.scripts_path}/power.ps1",
                                 "${local.scripts_path}/common-fixes.ps1",
@@ -38,6 +39,7 @@ locals {
                               ]
   vm_cd_files_desktop        = [
                                 "${local.scripts_path}/setup-openssh.ps1",
+                                "${local.scripts_path}/setup-winrm.ps1",
                                 "${local.scripts_path}/qemu-agent.ps1",
                                 "${local.scripts_path}/spice-tools.ps1",
                                 "${local.scripts_path}/bginfo.ps1",
@@ -105,6 +107,9 @@ source "qemu" "windows-server-standard-core" {
   ssh_username         = var.build_username
   ssh_private_key_file = var.communicator_key_file
   ssh_wait_timeout     = var.communicator_timeout
+  winrm_username       = var.build_username
+  winrm_password       = var.build_password
+  winrm_timeout        = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
 }
 
@@ -149,6 +154,9 @@ source "qemu" "windows-server-standard-desktop" {
   ssh_username         = var.build_username
   ssh_private_key_file = var.communicator_key_file
   ssh_wait_timeout     = var.communicator_timeout
+  winrm_username       = var.build_username
+  winrm_password       = var.build_password
+  winrm_timeout        = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
 }
 
@@ -193,6 +201,9 @@ source "qemu" "windows-server-datacenter-core" {
   ssh_username         = var.build_username
   ssh_private_key_file = var.communicator_key_file
   ssh_wait_timeout     = var.communicator_timeout
+  winrm_username       = var.build_username
+  winrm_password       = var.build_password
+  winrm_timeout        = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
 }
 
@@ -237,6 +248,9 @@ source "qemu" "windows-server-datacenter-desktop" {
   ssh_username         = var.build_username
   ssh_private_key_file = var.communicator_key_file
   ssh_timeout          = var.communicator_timeout
+  winrm_username       = var.build_username
+  winrm_password       = var.build_password
+  winrm_timeout        = var.communicator_timeout
   vnc_bind_address     = var.vnc_bind_address
 }
 

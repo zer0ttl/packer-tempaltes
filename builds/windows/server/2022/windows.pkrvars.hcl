@@ -12,7 +12,7 @@ vm_mem_size = 8192
 vm_shutdown_command = "E:\\sysprep.bat"
 
 // Communicator settings
-vm_communicator = "ssh"
+vm_communicator = "winrm"
 common_shutdown_timeout = "15m"
 communicator_timeout = "5h"
 communicator_port = 22
