@@ -44,7 +44,7 @@ variable "communicator_port" {
 variable "vm_communicator" {
   type        = string
   description = "The type of connection will be established to the machine."
-  default     = "winrm"
+  default     = "null"
 }
 
 // Virtual Machine Settings

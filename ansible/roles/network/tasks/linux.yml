@@ -1,7 +1,7 @@
 ---
 # Linux
 
-- name: Network configuration
+- name: Network configuration - Disable IPv6
   when: ansible_os_family == 'Debian'
   become: true
   block:
@@ -18,6 +18,10 @@
         state: present
         sysctl_set: true
 
+- name: Network configuration - Netplan
+  when: ansible_distribution == 'Ubuntu'
+  become: true
+  block:
     - name: Delete old netplan config
       ansible.builtin.file:
         path: /etc/netplan/00-installer-config.yaml
@@ -52,7 +56,7 @@
       changed_when: netplan_apply.rc != 0
 
 - name: DNS configuration
-  when: ansible_os_family == 'Debian'
+  when: ansible_distribution == 'Ubuntu'
   become: true
   block:
     - name: Set DNS servers

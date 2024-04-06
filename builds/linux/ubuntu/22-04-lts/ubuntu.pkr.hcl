@@ -62,7 +62,7 @@ source "qemu" "linux-ubuntu" {
     disk_interface   = var.vm_disk_interface
     format           = var.vm_image_format
     headless         = var.vm_headless
-    http_content   = local.data_source_content
+    http_content     = local.data_source_content
     iso_checksum     = var.iso_checksum
     iso_urls         = var.iso_urls
     memory           = var.vm_mem_size
@@ -90,8 +90,9 @@ build {
         "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
         ]
         extra_arguments = [
-        "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
-        "--extra-vars", "ansible_user='${var.build_username}'"
+            "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
+            "--extra-vars", "ansible_user='${var.build_username}'",
+            "--extra-vars", "desktop_env=false"
         ]
     }
 
@@ -116,9 +117,9 @@ build {
         "ANSIBLE_CONFIG=${local.ansible_path}/ansible.cfg"
         ]
         extra_arguments = [
-        "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
-        "--extra-vars", "ansible_user='${var.build_username}'",
-        "--extra-vars", "desktop_env=true",
+            "--extra-vars", "ansible_ssh_private_key_file=${abspath(path.root)}/${var.communicator_key_file}",
+            "--extra-vars", "ansible_user='${var.build_username}'",
+            "--extra-vars", "desktop_env=true",
         ]
     }
 

@@ -8,7 +8,7 @@
     - role: guest-agents
     - role: updates
     - role: desktop
-      when: desktop_env
+      when: desktop_env | bool
     - role: network
     - role: fixes
       # vars:

@@ -24,7 +24,7 @@
         name: root
         password_lock: true
 
-    - name: Disable passwordl login via ssh
+    - name: Disable password login via ssh
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         state: present
@@ -32,7 +32,7 @@
         line: 'PermitRootLogin no'
 
 - name: Disable upgrade popup and unattended upgrades
-  when: ansible_os_family == 'Debian'
+  when: ansible_distribution == 'Ubuntu'
   become: true
   block:
     - name: Disable upgrade popup
