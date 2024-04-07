@@ -35,7 +35,7 @@ locals {
         additional_packages      = join(" ", var.additional_packages)
         })
     }
-    vm_server     = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_server_edition}-${var.vm_guest_os_version}"
+    vm_name     = "${var.vm_guest_os_family}-${var.vm_guest_os_name}-${var.vm_guest_edition}-${var.vm_guest_os_version}"
     project_root = "${abspath(path.root)}../../../.."
     ansible_path = "${abspath(path.root)}/../../../../ansible"
     scripts_path = "${abspath(path.root)}/../../../../scripts/${var.vm_guest_os_family}/common"
@@ -103,6 +103,6 @@ build {
 
     post-processor "vagrant" {
         compression_level  = 9
-        output             = "packer_${local.vm_server}_{{.Provider}}_{{.Architecture}}.box"
+        output             = "packer_${local.vm_name}_{{.Provider}}_{{.Architecture}}.box"
     }
 }

@@ -38,6 +38,5 @@ vm_guest_os_timezone = "UTC"
 
 vm_guest_os_family             = "linux"
 vm_guest_os_name               = "kali"
-vm_guest_server_edition        = "server"
-vm_guest_desktop_edition       = "desktop"
+vm_guest_edition               = "linux"
 vm_guest_os_version            = "2024.1"
