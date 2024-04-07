@@ -37,7 +37,7 @@ vm_guest_os_keyboard = "us"
 vm_guest_os_timezone = "UTC"
 
 vm_guest_os_family             = "linux"
-vm_guest_os_name               = "ubudebianntu"
+vm_guest_os_name               = "debian"
 vm_guest_server_edition        = "server"
 vm_guest_desktop_edition       = "desktop"
 vm_guest_os_version            = "12.5"

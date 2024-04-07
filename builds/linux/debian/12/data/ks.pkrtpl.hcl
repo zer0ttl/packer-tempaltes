@@ -51,11 +51,18 @@ d-i passwd/user-password-crypted password ${build_password_encrypted}
 d-i pkgsel/run_tasksel boolean false
 d-i pkgsel/include string openssh-server open-vm-tools python3-apt perl ${additional_packages}
 
-# Add User to Sudoers and remove cdrom from apt sources
+# Add User to Sudoers, remove cdrom from apt sources, and add vagrant public keys
 d-i preseed/late_command string \
     sed -i '/^deb cdrom:/s/^/#/' /target/etc/apt/sources.list ; \
     echo '${build_username} ALL=(ALL) NOPASSWD: ALL' > /target/etc/sudoers.d/${build_username} ; \
-    in-target chmod 440 /etc/sudoers.d/${build_username} ;
+    in-target chmod 440 /etc/sudoers.d/${build_username} ; \
+    in-target /bin/sh -c "mkdir -p /home/${build_username}/.ssh" ; \
+%{ for key in build_authorized_keys ~}
+    in-target /bin/sh -c "echo '${key}' >> /home/${build_username}/.ssh/authorized_keys" ; \
+%{ endfor ~}
+    in-target /bin/sh -c "chown -R ${build_username}:${build_username} /home/vagrant/.ssh/" ; \
+    in-target /bin/sh -c "chmod 644 /home/vagrant/.ssh/authorized_keys" ; \
+    in-target /bin/sh -c "chmod 700 /home/vagrant/.ssh/" ;
 
 %{ if common_data_source == "disk" ~}
 # Umount preseed media early

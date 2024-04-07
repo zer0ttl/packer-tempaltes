@@ -1,0 +1,5 @@
+[Match]
+Name=ens7
+
+[Network]
+DHCP=yes

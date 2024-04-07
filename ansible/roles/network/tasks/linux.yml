@@ -18,6 +18,18 @@
         state: present
         sysctl_set: true
 
+- name: Network configuration - Systemd
+  when: ansible_distribution == 'Debian'
+  become: true
+  block:
+    - name: Create a new network configuration
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/00-installer-ens7.network"
+        dest: /etc/systemd/network/00-dhcp.network
+        owner: root
+        group: root
+        mode: '0644'
+  
 - name: Network configuration - Netplan
   when: ansible_distribution == 'Ubuntu'
   become: true
@@ -54,6 +66,18 @@
         cmd: netplan apply
       register: netplan_apply
       changed_when: netplan_apply.rc != 0
+
+- name: DNS configuration - Resolv
+  when: ansible_distribution == 'Debian'
+  become: true
+  block:
+    - name: Create a new DNS configuration
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/resolv.conf"
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
 
 - name: DNS configuration
   when: ansible_distribution == 'Ubuntu'

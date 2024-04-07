@@ -27,6 +27,7 @@ locals {
         build_username           = var.build_username
         build_password           = var.build_password
         build_password_encrypted = var.build_password_encrypted
+        build_authorized_keys    = var.build_authorized_keys
         vm_guest_os_language     = var.vm_guest_os_language
         vm_guest_os_keyboard     = var.vm_guest_os_keyboard
         vm_guest_os_timezone     = var.vm_guest_os_timezone
