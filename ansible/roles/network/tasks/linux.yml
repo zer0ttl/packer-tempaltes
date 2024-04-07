@@ -29,7 +29,19 @@
         owner: root
         group: root
         mode: '0644'
-  
+
+- name: Network configuration - Systemd
+  when: ansible_distribution == 'Kali'
+  become: true
+  block:
+    - name: Create a new network configuration
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/00-installer-eth0.network"
+        dest: /etc/systemd/network/00-dhcp.network
+        owner: root
+        group: root
+        mode: '0644'
+
 - name: Network configuration - Netplan
   when: ansible_distribution == 'Ubuntu'
   become: true
@@ -68,7 +80,7 @@
       changed_when: netplan_apply.rc != 0
 
 - name: DNS configuration - Resolv
-  when: ansible_distribution == 'Debian'
+  when: ansible_distribution in ['Debian', 'Kali']
   become: true
   block:
     - name: Create a new DNS configuration
@@ -140,27 +152,6 @@
         name: systemd-networkd.service
         state: restarted
         enabled: true
-
-# - name: Install and configure ifplugd
-#   when: ansible_os_family == 'Debian'
-#   become: true
-#   block:
-#     - name: Install ifplugd so we can monitor and auto-configure nics
-#       ansible.builtin.apt:
-#         name: ifplugd
-#         state: present
-
-#     - name: Configure ifplugd to monitor the eth0 interface
-#       ansible.builtin.lineinfile:
-#         path: /etc/default/ifplugd
-#         state: present
-#         regexp: '^INTERFACES='
-#         line: 'INTERFACES="eth0"'
-
-#     - name: Enable ifplugd service
-#       ansible.builtin.systemd_service:
-#         name: ifplugd.service
-#         enabled: true
 
 # Ref: https://wiki.archlinux.org/title/systemd-resolved
 # Ref: https://www.freedesktop.org/software/systemd/man/latest/resolved.conf.html
