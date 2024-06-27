@@ -1,0 +1,199 @@
+---
+# Security
+
+- name: Prep and install parrotos
+  when: ansible_os_family == 'Debian'
+  become: true
+  block:
+    - name: Install wget
+      ansible.builtin.apt:
+        update_cache: true
+        name: wget
+        state: present
+
+    - name: Perform full apt upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: full
+
+    - name: Update sources.list
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/sources.list"
+        dest: /etc/apt/sources.list
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Download Parrotos archive keyring
+      ansible.builtin.get_url:
+        url: "https://deb.parrot.sh/parrot/pool/main/p/parrot-archive-keyring/parrot-archive-keyring_2021.7%2Bparrot2_all.deb"
+        dest: /tmp/parrot-archive-keyring_2021.7-parrot2_all.deb
+
+    - name: Install keyring
+      ansible.builtin.apt:
+        deb: /tmp/parrot-archive-keyring_2021.7-parrot2_all.deb
+      ignore_errors: true
+
+    - name: Install parrot-core
+      ansible.builtin.apt:
+        update_cache: true
+        name: parrot-core
+        state: present
+      ignore_errors: true
+
+    - name: Perform full apt upgrade
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: full
+      ignore_errors: true
+
+    - name: Install packages - xserver
+      ansible.builtin.apt:
+        name: "{{ parrotos_packages_xserver }}"
+        update_cache: true
+      ignore_errors: true
+
+    - name: Install packages - linux headers
+      ansible.builtin.apt:
+        name: "{{ parrotos_packages_linux_headers }}"
+        update_cache: true
+      ignore_errors: true
+
+    - name: Install packages - list1
+      ansible.builtin.apt:
+        name: "{{ parrotos_packages_list1 }}"
+        update_cache: true
+      ignore_errors: true
+
+    - name: Install packages - list2
+      ansible.builtin.apt:
+        name: "{{ parrotos_packages_list2 }}"
+        update_cache: true
+      ignore_errors: true
+
+    - name: Install packages - parrotos security
+      ansible.builtin.apt:
+        name: "{{ parrotos_packages_security }}"
+        update_cache: true
+      ignore_errors: true
+
+    - name: Check if /usr/share/parrot-menu/update-launchers is present
+      ansible.builtin.stat:
+        path: /usr/share/parrot-menu/update-launchers
+      register: parrot_menu
+
+    - name: Run /usr/share/parrot-menu/update-launchers if it is executable
+      ansible.builtin.command: /usr/share/parrot-menu/update-launchers
+      when: parrot_menu.stat.exists
+
+    - name: Create symbolic link for gnome-terminal
+      ansible.builtin.file:
+        src: /usr/bin/mate-terminal
+        dest: /usr/local/bin/gnome-terminal
+        state: link
+        force: true
+
+    - name: Check if slick-greeter-security.conf is present
+      ansible.builtin.stat:
+        path: /etc/lightdm/slick-greeter-security.conf
+      register: parrot_slick_greeter
+
+    - name: Copy content from slick-greeter-security.conf to slick-greeter.conf
+      ansible.builtin.copy:
+        src: /etc/lightdm/slick-greeter-security.conf
+        dest: /etc/lightdm/slick-greeter.conf
+        remote_src: yes
+      when: parrot_slick_greeter.stat.exists
+
+    - name: Update slick-greeter.conf
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/slick-greeter-security.conf"
+        dest: /etc/lightdm/slick-greeter.conf
+        owner: root
+        group: root
+        mode: '0644'
+      when: not parrot_slick_greeter.stat.exists
+      
+    - name: Update the apt package index
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to the latest version available from lory-backports
+      ansible.builtin.apt:
+        upgrade: full
+        default_release: lory-backports
+        autoremove: yes
+      ignore_errors: true
+
+    - name: Remove unnecessary packages
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: yes
+      ignore_errors: true
+
+    - name: Clean the apt cache
+      ansible.builtin.apt:
+        autoclean: yes
+      ignore_errors: true
+
+    - name: Disable unwanted services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        enabled: false
+      ignore_errors: true
+      loop: "{{ parrotos_services_to_disable }}"
+
+    - name: Check if updatedb is available and executable
+      ansible.builtin.command: which updatedb
+      register: updatedb_check
+      ignore_errors: true
+
+    - name: Run updatedb
+      ansible.builtin.command: updatedb
+      when: updatedb_check.rc == 0
+
+    - name: Add Flathub remote if not exists
+      ansible.builtin.command:
+        cmd: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+      ignore_errors: true
+
+    - name: Install Postman from Flathub
+      ansible.builtin.command:
+        cmd: flatpak install -y flathub com.getpostman.Postman
+      ignore_errors: true
+
+    - name: Update initramfs
+      ansible.builtin.command:
+        cmd: update-initramfs -u
+
+    - name: Add 'vagrant' to additional groups
+      ansible.builtin.user:
+        name: user
+        groups: "{{ item }}"
+        append: true
+      loop: "{{ parrotos_user_groups }}"
+      ignore_errors: true
+
+    - name: Configure autologin in lightdm.conf
+      ansible.builtin.lineinfile:
+        path: /etc/lightdm/lightdm.conf
+        regexp: '^#?autologin-user='
+        line: 'autologin-user=vagrant'
+
+    - name: Set autologin timeout in lightdm.conf
+      ansible.builtin.lineinfile:
+        path: /etc/lightdm/lightdm.conf
+        regexp: '^#?autologin-user-timeout='
+        line: 'autologin-user-timeout=4'
+
+    - name: Copy .bashrc from /etc/skel to root's home directory
+      ansible.builtin.copy:
+        src: /etc/skel/.bashrc
+        dest: /root/.bashrc
+        remote_src: true
+
+    - name: Copy .profile from /etc/skel to root's home directory
+      ansible.builtin.copy:
+        src: /etc/skel/.profile
+        dest: /root/.profile
+        remote_src: true
