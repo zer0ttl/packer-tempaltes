@@ -6,15 +6,16 @@
 - #todo Add windows 2019 boxes
 - #todo Add windows 2025 boxes
 - #todo
-  make ansible roles for spice-agent.sh | DONE
-  make ansible roles for qemu-agent.sh | DONE
-  make ansible roles for network.sh | DONE
-  make ansible roles for updates.sh | DONE
-  make ansible roles for fixes.sh
-  make ansible roles for desktop.sh
-  make ansible roles for setup-vagrant.sh NOT REQUIRED | DONE
+- [x] make ansible roles for spice-agent.sh | DONE
+- [x] make ansible roles for qemu-agent.sh | DONE
+- [x] make ansible roles for network.sh | DONE
+- [x] make ansible roles for updates.sh | DONE
+- [x] make ansible roles for fixes.sh
+- [x] make ansible roles for desktop.sh
+- [x] make ansible roles for setup-vagrant.sh NOT REQUIRED | DONE
 
-hosts.yml
+- hosts.yml
+```yaml
 ubuntu_servers:
   hosts:
     demo_us999:
@@ -22,8 +23,9 @@ ubuntu_servers:
   vars:
     ansible_user: vagrant
     ansible_ssh_private_key_file: vagrant-key
-
-ansible.cfg
+```
+- ansible.cfg
+```ini
 [defaults]
 display_skipped_hosts = false
 host_key_checking = false
@@ -31,22 +33,24 @@ timeout = 60
 
 [ssh_connection]
 ssh_args = -o UserKnownHostsFile=/dev/null
+```
 
-
+```bash
 chmod 0600 vagrant-key
-
+```
 
 - Sort this:
 
-
-
+```bash
+PACKER_LOG=1 packer build -timestamp-ui -on-error=ask -var-file=parrotos.pkrvars.hcl .
+packer build -timestamp-ui -on-error=ask -var-file=parrotos.pkrvars.hcl .
 
 packer inspect -var-file=windows-server.pkvars.hcl .
 packer validate -var-file=windows-server.pkvars.hcl .
 
 packer build -force -on-error=ask --only qemu.windows-server-standard-desktop -var-file=windows-server.pkvars.hcl .
 packer build -force -on-error=ask --only windows-server-datacenter-desktop.* -var-file=windows-server.pkvars.hcl .
-
+```
 
 # do not use -var-file=variable.pkr.hcl
 # that is the variable declaration file
@@ -71,7 +75,7 @@ e:\
 f:\
     when using cd, this is the virtio drivers iso
 
-
+```hcl
 provisioner "ansible" {
     user = var.build_username
     use_proxy = false
@@ -143,6 +147,7 @@ build {
       only                 = ["qemu.windows-server-datacenter-desktop"]
   }
 }
+```
 
 ---
 
