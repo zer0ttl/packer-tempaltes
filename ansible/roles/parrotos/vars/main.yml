@@ -1,0 +1,139 @@
+---
+task_name: "Install parrotos"
+
+# package list: xserver
+parrotos_packages_xserver:
+  - xserver-xorg-input-all
+  - xserver-xorg-video-all
+
+# package list: linux headers
+parrotos_packages_linux_headers:
+  - linux-headers-amd64
+
+# package list: package 1
+parrotos_packages_list1:
+  - locales
+  - locales-all
+  - plymouth
+  - plymouth-themes
+  - tasksel
+  - cryptsetup
+  - cryptsetup-nuke-password
+  - iw
+  - lvm2
+  - mdadm
+  - parted
+  - gpart
+  - bash-completion
+  - rng-tools5
+  - haveged
+  - lightdm
+
+# package list: package 2
+parrotos_packages_list2:
+  - neovim
+  - inxi
+  - neofetch
+  - htop
+  - nload
+  - iftop
+  - jfsutils
+  - hfsplus
+  - hfsutils
+  - btrfs-progs
+  - e2fsprogs
+  - dosfstools
+  - mtools
+  - reiser4progs
+  - reiserfsprogs
+  - xfsprogs
+  - xfsdump
+  - ntfs-3g
+  - libfsapfs1
+  - libfsapfs-utils
+  - apparmor
+  - apparmor-profiles
+  - apparmor-profiles-extra
+  - apparmor-utils
+  - apparmor-easyprof
+  - apparmor-notify
+
+# package list: parrotos security
+parrotos_packages_security:
+  - parrot-meta-devel
+  - parrot-meta-privacy
+  - parrot-meta-crypto
+  - parrot-tools-full
+  - parrot-interface
+  - parrot-desktop-mate
+  - codium
+  - golang-go
+  - nodejs
+  - npm
+  - default-jdk
+  - python3-pip
+  - git
+  - podman
+  - podman-docker
+  - flatpak
+  - flatpak-xdg-utils
+  - mate-user-guide
+  - pocketsphinx-en-us
+  - libreoffice-help-en-us
+  - mythes-en-us
+  - libreoffice-help-common
+  - espeak-ng-data
+  - android-sdk
+  - android-sdk-*
+  - dradis
+  - exploitdb
+  - exploitdb-*
+  - ferret
+  - ferret-*
+  - freepats
+  - gcc-avr
+  - gnuradio
+  - gnuradio-*
+  - guile-2.2-libs
+  - imagemagick
+  - imagemagick-*
+  - lmodern
+  - minicom
+  - pandoc
+  - pandoc-*
+  - plasma-discover
+  - plasma-discover-common
+  - qttools5-dev-tools
+  - seclists
+  - tex-*
+  - thunderbird
+  - thunderbird-*
+  - vim
+  - vim-*
+  - xpdf
+  - xpra
+  - termit
+
+# services to disable:
+parrotos_services_to_disable:
+  - postgres
+  - gsad
+  - redis-server
+  - xrdp
+  - opensnitch
+
+# user groups
+parrotos_user_groups:
+  - dialout
+  - cdrom
+  - floppy
+  - sudo
+  - audio
+  - dip
+  - video
+  - plugdev
+  - netdev
+  - bluetooth
+  - lpadmin
+  - scanner
+  - docker
